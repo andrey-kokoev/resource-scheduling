@@ -38,8 +38,35 @@
         color: var(--muted);
         line-height: 1.6;
       }
-      .nav {
+      .breadcrumb {
+        margin: 0 0 1rem;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .breadcrumb a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .breadcrumb strong {
+        color: var(--ink);
+      }
+      .nav-stack {
         margin-top: 1rem;
+        display: grid;
+        gap: 0.85rem;
+      }
+      .nav-group {
+        display: grid;
+        gap: 0.45rem;
+      }
+      .nav-label {
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .nav {
         display: flex;
         flex-wrap: wrap;
         gap: 0.75rem;
@@ -60,6 +87,11 @@
         background: var(--accent);
         color: white;
         border-color: transparent;
+      }
+      a.button.current,
+      a.button[aria-current="page"] {
+        background: #f1e1d3;
+        border-color: #b98a6f;
       }
       main {
         display: grid;
@@ -126,18 +158,35 @@
   </head>
   <body>
     <header>
+      <p class="breadcrumb"><a href="./index.html">Playground</a> / <a href="./docs.html">Docs</a> / <strong>Package overview</strong></p>
       <h1>Feasibility Core Overview</h1>
       <p class="lede">
         A compact browser-readable overview of what the package is for, what it accepts, and what it returns.
         Use this if you want package orientation without opening raw markdown.
       </p>
-      <div class="nav">
-        <a class="button primary" href="./boundary.html">Boundary guide</a>
-        <a class="button" href="./docs.html">Docs landing page</a>
-        <a class="button" href="./category-theoretic-boundary.html">Abstract companion</a>
-        <a class="button" href="./feature-matrix.html">Feature matrix</a>
-        <a class="button" href="./examples-overview.html">Examples</a>
-        <a class="button" href="./index.html">Open playground</a>
+      <div class="nav-stack">
+        <div class="nav-group">
+          <div class="nav-label">Start here</div>
+          <div class="nav">
+            <a class="button primary" href="./index.html">Playground evaluator</a>
+            <a class="button" href="./docs.html">Docs hub</a>
+          </div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-label">Guides</div>
+          <div class="nav">
+            <a class="button" href="./boundary.html">Boundary guide</a>
+            <a class="button current" href="./package-overview.html" aria-current="page">Package overview</a>
+            <a class="button" href="./examples-overview.html">Examples overview</a>
+            <a class="button" href="./feature-matrix.html">Feature matrix</a>
+          </div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-label">Advanced</div>
+          <div class="nav">
+            <a class="button" href="./category-theoretic-boundary.html">Abstract boundary view</a>
+          </div>
+        </div>
       </div>
     </header>
 

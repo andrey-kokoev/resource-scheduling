@@ -41,8 +41,35 @@
         color: var(--muted);
         line-height: 1.65;
       }
-      .nav {
+      .breadcrumb {
+        margin: 0 0 1rem;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .breadcrumb a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .breadcrumb strong {
+        color: var(--ink);
+      }
+      .nav-stack {
         margin-top: 1rem;
+        display: grid;
+        gap: 0.85rem;
+      }
+      .nav-group {
+        display: grid;
+        gap: 0.45rem;
+      }
+      .nav-label {
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .nav {
         display: flex;
         flex-wrap: wrap;
         gap: 0.75rem;
@@ -63,6 +90,11 @@
         background: var(--accent);
         color: white;
         border-color: transparent;
+      }
+      a.button.current,
+      a.button[aria-current="page"] {
+        background: #ead9e6;
+        border-color: #9b7393;
       }
       main {
         display: grid;
@@ -159,17 +191,36 @@
   </head>
   <body>
     <header>
+      <p class="breadcrumb"><a href="./index.html">Playground</a> / <a href="./docs.html">Docs</a> / <strong>Abstract boundary view</strong></p>
       <h1>Feasibility Boundary, Abstract View</h1>
       <p class="lede">
         This page restates the same system boundary as the plain guide, but in object/morphism language for advanced
         readers and machine-oriented interpretation. It does not add scope; it explains what the boundary preserves,
         what it quotients away, and where it is lossy.
       </p>
-      <div class="nav">
-        <a class="button primary" href="/apps/feasibility-playground/boundary.html">Plain boundary guide</a>
-        <a class="button" href="/apps/feasibility-playground/index.html">Open playground</a>
-        <a class="button" href="/apps/feasibility-playground/package-overview.html">Package overview</a>
-        <a class="button" href="/apps/feasibility-playground/docs.html">Docs landing page</a>
+      <div class="nav-stack">
+        <div class="nav-group">
+          <div class="nav-label">Start here</div>
+          <div class="nav">
+            <a class="button" href="./index.html">Playground evaluator</a>
+            <a class="button" href="./docs.html">Docs hub</a>
+          </div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-label">Guides</div>
+          <div class="nav">
+            <a class="button primary" href="./boundary.html">Boundary guide</a>
+            <a class="button" href="./package-overview.html">Package overview</a>
+            <a class="button" href="./examples-overview.html">Examples overview</a>
+            <a class="button" href="./feature-matrix.html">Feature matrix</a>
+          </div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-label">Advanced</div>
+          <div class="nav">
+            <a class="button current" href="./category-theoretic-boundary.html" aria-current="page">Abstract boundary view</a>
+          </div>
+        </div>
       </div>
     </header>
 
