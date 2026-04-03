@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staffing Scheduling Playground</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4efe8;
+        --panel: #fffaf4;
+        --ink: #1f1a17;
+        --muted: #6b625c;
+        --accent: #8a4b2f;
+        --accent-2: #215e63;
+        --border: #d9cbbf;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(180deg, #f8f3ec 0%, var(--bg) 100%);
+        color: var(--ink);
+      }
+      header {
+        padding: 2rem 1.5rem 1rem;
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+      h1 { margin: 0 0 0.5rem; font-size: clamp(2rem, 4vw, 3rem); }
+      .lede { margin: 0; color: var(--muted); max-width: 72ch; }
+      .breadcrumb {
+        margin: 0 0 1rem;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .breadcrumb a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .breadcrumb strong {
+        color: var(--ink);
+      }
+      .nav-stack {
+        margin-top: 1rem;
+        display: grid;
+        gap: 0.85rem;
+      }
+      .nav-group {
+        display: grid;
+        gap: 0.45rem;
+      }
+      .nav-label {
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      a.button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.7rem 1rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid var(--border);
+        color: var(--ink);
+        background: rgba(255, 250, 244, 0.9);
+      }
+      a.button.primary {
+        background: var(--accent);
+        color: white;
+        border-color: transparent;
+      }
+      a.button.current,
+      a.button[aria-current="page"] {
+        background: #f1e1d3;
+        border-color: #b98a6f;
+      }
+      main {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 1.5rem 2rem;
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        gap: 1rem;
+      }
+      .card {
+        background: rgba(255, 250, 244, 0.92);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: 0 12px 40px rgba(69, 47, 33, 0.08);
+        overflow: hidden;
+      }
+      .card h2 {
+        margin: 0;
+        padding: 1rem 1rem 0.75rem;
+        font-size: 1rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .card .body { padding: 0 1rem 1rem; }
+      textarea {
+        width: 100%;
+        min-height: 640px;
+        resize: vertical;
+        padding: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: #fffdfb;
+        color: var(--ink);
+        font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      }
+      .toolbar {
+        display: flex;
+        gap: 0.75rem;
+        padding: 0 0 1rem;
+        flex-wrap: wrap;
+      }
+      button {
+        border: 0;
+        border-radius: 999px;
+        padding: 0.75rem 1rem;
+        font: inherit;
+        cursor: pointer;
+      }
+      select {
+        flex: 1 1 280px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 0.75rem 1rem;
+        background: #fffdfb;
+        color: var(--ink);
+        font: inherit;
+      }
+      .primary { background: var(--accent); color: white; }
+      .secondary { background: #e7ddd2; color: var(--ink); }
+      .status {
+        padding: 0.75rem 1rem;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      .result {
+        display: grid;
+        gap: 1rem;
+      }
+      .summary {
+        padding: 0.9rem 1rem;
+        border: 1px solid #eadfd5;
+        border-radius: 14px;
+        background: #fffdfb;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.25rem 0.65rem;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 700;
+      }
+      .pill.ok { background: #e8f3e9; color: #21622c; }
+      .pill.bad { background: #fde9e4; color: #912f18; }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        text-align: left;
+        padding: 0.6rem 0.4rem;
+        border-bottom: 1px solid #eadfd5;
+        vertical-align: top;
+      }
+      th { font-size: 0.78rem; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; }
+      pre {
+        margin: 0;
+        padding: 0.9rem;
+        background: #0f1720;
+        color: #e7f1ff;
+        border-radius: 14px;
+        overflow: auto;
+        font-size: 0.9rem;
+      }
+      ul { margin: 0.5rem 0 0; padding-left: 1.25rem; }
+      li { margin: 0.25rem 0; }
+      .hint { color: var(--muted); font-size: 0.9rem; }
+      h3 {
+        margin: 0 0 0.25rem;
+        font-size: 0.92rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--accent-2);
+      }
+      h4 {
+        margin: 0 0 0.35rem;
+        font-size: 0.86rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+      }
+      .need-card {
+        padding: 0.9rem 1rem;
+        border: 1px solid #eadfd5;
+        border-radius: 14px;
+        background: #fffdfb;
+      }
+      .need-card + .need-card { margin-top: 0.8rem; }
+      .need-primary,
+      .need-support li {
+        margin-top: 0.5rem;
+      }
+      .need-support ul {
+        margin-top: 0.35rem;
+      }
+      section + section { margin-top: 0.8rem; }
+      @media (max-width: 1080px) {
+        main { grid-template-columns: 1fr; }
+        textarea { min-height: 480px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p class="breadcrumb"><strong>Playground</strong></p>
+      <h1>Staffing Scheduling Playground</h1>
+      <p class="lede">
+        A thin evaluator for <code>staffing-scheduling</code>. Load the sample plant, run the hard-feasibility kernel,
+        and inspect either assignments or regrouped explanations. This is a playground, not a scheduling product.
+      </p>
+      <p class="lede" style="margin-top: 0.75rem;">
+        Need the docs hub first?
+      </p>
+      <div class="nav-stack">
+        <div class="nav-group">
+          <div class="nav-label">Start here</div>
+          <div class="nav">
+            <a class="button current" href="./index.html" aria-current="page">Playground evaluator</a>
+            <a class="button primary" href="./docs.html">Docs hub</a>
+          </div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-label">Guides</div>
+          <div class="nav">
+            <a class="button" href="./boundary.html">Boundary guide</a>
+            <a class="button" href="./package-overview.html">Package overview</a>
+            <a class="button" href="./examples-overview.html">Examples overview</a>
+            <a class="button" href="./feature-matrix.html">Feature matrix</a>
+          </div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-label">Advanced</div>
+          <div class="nav">
+            <a class="button" href="./category-theoretic-boundary.html">Abstract boundary view</a>
+          </div>
+        </div>
+      </div>
+      <p class="lede" style="margin-top: 0.85rem;">
+        The docs landing page is the fastest way to orient before opening the boundary guide, package overview,
+        examples, or feature matrix.
+      </p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Scenario JSON</h2>
+        <div class="body">
+          <div class="toolbar">
+            <select id="sample-scenario" aria-label="Sample scenario"></select>
+            <button class="primary" id="run-scenario">Run Evaluation</button>
+          </div>
+          <textarea id="scenario-json" spellcheck="false"></textarea>
+        </div>
+        <div class="status" id="status">Loading sample...</div>
+      </section>
+
+      <section class="card">
+        <h2>Result</h2>
+        <div class="body result" id="result">
+          <div id="scenario-summary" class="summary"></div>
+          <p class="hint">Run the sample to see assignments or regrouped explanations.</p>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./playground.mjs"></script>
+  </body>
+</html>

@@ -8,7 +8,9 @@ importers:
 
   .: {}
 
-  apps/feasibility-playground:
+  apps/batch-flow-scheduling-playground: {}
+
+  apps/staffing-scheduling-playground:
     devDependencies:
       '@playwright/test':
         specifier: ^1.59.1
@@ -23,7 +25,16 @@ importers:
         specifier: ^4.80.0
         version: 4.80.0
 
-  packages/feasibility-core:
+  packages/batch-flow-scheduling:
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.39
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+
+  packages/staffing-scheduling:
     devDependencies:
       '@types/node':
         specifier: ^20.0.0

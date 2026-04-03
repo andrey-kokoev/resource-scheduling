@@ -1,0 +1,20 @@
+{
+  "name": "staffing-scheduling",
+  "version": "1.0.0",
+  "description": "Hard-constraint staffing scheduling engine for assigning candidates to needs under hard rules",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test dist/tests/**/*.test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

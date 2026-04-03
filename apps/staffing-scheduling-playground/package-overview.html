@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Staffing Scheduling Overview</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f2eb;
+        --panel: #fffaf4;
+        --ink: #201a17;
+        --muted: #655b54;
+        --accent: #8a4b2f;
+        --accent-2: #215e63;
+        --border: #daccc0;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(180deg, #fbf7f1 0%, var(--bg) 100%);
+        color: var(--ink);
+      }
+      header, main {
+        max-width: 1140px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
+      header { padding-top: 2rem; }
+      h1 {
+        margin: 0 0 0.5rem;
+        font-size: clamp(2rem, 4vw, 3rem);
+      }
+      .lede {
+        max-width: 80ch;
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .breadcrumb {
+        margin: 0 0 1rem;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .breadcrumb a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .breadcrumb strong {
+        color: var(--ink);
+      }
+      .nav-stack {
+        margin-top: 1rem;
+        display: grid;
+        gap: 0.85rem;
+      }
+      .nav-group {
+        display: grid;
+        gap: 0.45rem;
+      }
+      .nav-label {
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      a.button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.7rem 1rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid var(--border);
+        color: var(--ink);
+        background: rgba(255, 250, 244, 0.9);
+      }
+      a.button.primary {
+        background: var(--accent);
+        color: white;
+        border-color: transparent;
+      }
+      a.button.current,
+      a.button[aria-current="page"] {
+        background: #f1e1d3;
+        border-color: #b98a6f;
+      }
+      main {
+        display: grid;
+        gap: 1rem;
+        padding-top: 1.5rem;
+        padding-bottom: 2rem;
+      }
+      section {
+        background: rgba(255, 250, 244, 0.94);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: 0 12px 40px rgba(69, 47, 33, 0.08);
+        padding: 1rem 1.1rem;
+      }
+      h2 {
+        margin: 0 0 0.45rem;
+        font-size: 1rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--accent-2);
+      }
+      p, li { line-height: 1.6; }
+      .grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      @media (max-width: 900px) {
+        .grid { grid-template-columns: 1fr; }
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0.75rem;
+      }
+      th, td {
+        text-align: left;
+        padding: 0.65rem 0.45rem;
+        border-bottom: 1px solid #eadfd5;
+        vertical-align: top;
+      }
+      th {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        color: var(--muted);
+        letter-spacing: 0.05em;
+      }
+      code {
+        background: #f1e7dc;
+        padding: 0.1rem 0.35rem;
+        border-radius: 6px;
+      }
+      ul {
+        margin: 0.5rem 0 0;
+        padding-left: 1.25rem;
+      }
+      .callout {
+        background: #f7efe6;
+        border-left: 4px solid var(--accent);
+        padding: 0.9rem 1rem;
+        border-radius: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p class="breadcrumb"><a href="./index.html">Playground</a> / <a href="./docs.html">Docs</a> / <strong>Package overview</strong></p>
+      <h1>Staffing Scheduling Overview</h1>
+      <p class="lede">
+        A compact browser-readable overview of what the package is for, what it accepts, and what it returns.
+        Use this if you want package orientation without opening raw markdown.
+      </p>
+      <div class="nav-stack">
+        <div class="nav-group">
+          <div class="nav-label">Start here</div>
+          <div class="nav">
+            <a class="button primary" href="./index.html">Playground evaluator</a>
+            <a class="button" href="./docs.html">Docs hub</a>
+          </div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-label">Guides</div>
+          <div class="nav">
+            <a class="button" href="./boundary.html">Boundary guide</a>
+            <a class="button current" href="./package-overview.html" aria-current="page">Package overview</a>
+            <a class="button" href="./examples-overview.html">Examples overview</a>
+            <a class="button" href="./feature-matrix.html">Feature matrix</a>
+          </div>
+        </div>
+        <div class="nav-group">
+          <div class="nav-label">Advanced</div>
+          <div class="nav">
+            <a class="button" href="./category-theoretic-boundary.html">Abstract boundary view</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <h2>What this package is</h2>
+        <p>
+          <code>staffing-scheduling</code> is a hard-constraint feasibility engine for shift-based staffing. It answers
+          whether every required demand unit can be assigned to a qualified, available agent without violating hard
+          rules.
+        </p>
+      </section>
+
+      <div class="grid">
+        <section>
+          <h2>Recommended flow</h2>
+          <ol>
+            <li>Build domain input.</li>
+            <li>Compile to the solver boundary.</li>
+            <li>Solve for feasibility.</li>
+            <li>If infeasible, regroup primitive failures back into domain explanations.</li>
+          </ol>
+          <p class="muted">The package is about feasibility, not optimization or ranking among feasible schedules.</p>
+        </section>
+
+        <section>
+          <h2>What comes back</h2>
+          <table>
+            <thead>
+              <tr><th>Result</th><th>Meaning</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Feasible</td><td>A complete assignment set.</td></tr>
+              <tr><td>Infeasible</td><td>Regrouped explanations in domain terms, centered on failed needs.</td></tr>
+              <tr><td>Metadata</td><td>Site and line context is preserved where it matters.</td></tr>
+            </tbody>
+          </table>
+        </section>
+      </div>
+
+      <div class="grid">
+        <section>
+          <h2>Supported at a glance</h2>
+          <ul>
+            <li>Exact-match qualifications with validity windows</li>
+            <li>Availability and time off as hard eligibility</li>
+            <li>Shift-pattern compatibility and rest rules</li>
+            <li>Rolling utilization max</li>
+            <li>Site- and line-aware coverage regrouping</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>What it does not do</h2>
+          <ul>
+            <li>No optimization or preference ranking</li>
+            <li>No partial-fill success mode</li>
+            <li>No substitution lattice</li>
+            <li>No production sequencing or line balancing</li>
+          </ul>
+        </section>
+      </div>
+
+      <section class="callout">
+        For a concrete plant-staffing walkthrough, open the examples page or the playground itself.
+      </section>
+    </main>
+  </body>
+</html>

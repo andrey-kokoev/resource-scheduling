@@ -1,0 +1,17 @@
+{
+  "name": "staffing-scheduling-playground",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "pnpm --filter staffing-scheduling build && vite build && XDG_CONFIG_HOME=/tmp/codex-wrangler XDG_CACHE_HOME=/tmp/codex-wrangler-cache wrangler deploy --dry-run && node validate.mjs",
+    "test:e2e": "playwright test --config playwright.config.mjs",
+    "typecheck": "node --check worker.mjs && node --check evaluator.mjs && node --check playground.mjs && node --check scenario.mjs && node --check validate.mjs && node --check playwright.config.mjs && node --check e2e/helpers.mjs && node --check e2e/playground.spec.mjs",
+    "dev": "vite",
+    "test": "pnpm --filter staffing-scheduling build && node validate.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "vite": "^8.0.0",
+    "wrangler": "^4.80.0"
+  }
+}
