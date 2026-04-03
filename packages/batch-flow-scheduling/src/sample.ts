@@ -145,6 +145,91 @@ export const tightenFillMaxLag: BatchFlowSampleTransform = model => {
   return next;
 };
 
+export const addSecondJuiceBatchSharingFiller: BatchFlowSampleTransform = model => {
+  const next = cloneModel(model);
+  next.batches.push({
+    id: 'batch-2',
+    batchTypeId: 'bt-juice',
+    releaseTimeMs: 20_000,
+    dueTimeMs: 160_000,
+    lotId: 'LOT-002',
+  });
+
+  if (next.schedule) {
+    next.schedule.scheduledSteps.push(
+      {
+        id: 'sched-b2-mix',
+        batchId: 'batch-2',
+        routeStepTemplateId: 'mix',
+        processorInstanceId: 'mx-1',
+        startMs: 20_000,
+        endMs: 80_000,
+      },
+      {
+        id: 'sched-b2-fill',
+        batchId: 'batch-2',
+        routeStepTemplateId: 'fill',
+        processorInstanceId: 'fl-1',
+        startMs: 100_000,
+        endMs: 130_000,
+      },
+    );
+    next.schedule.notes = 'Two juice batches sharing one filler';
+  }
+
+  return next;
+};
+
+export const addSecondLineAndFiller: BatchFlowSampleTransform = model => {
+  const next = cloneModel(model);
+  next.processorInstances.push({
+    id: 'fl-2',
+    name: 'Filler 2',
+    processorTypeId: 'ptFill',
+    lineId: 'line-b',
+    siteId: 'plant-a',
+  });
+  next.batchTypes.push({
+    id: 'bt-tonic',
+    name: 'Tonic Batch',
+    route: [
+      { id: 'premix', sequence: 1, name: 'Premix', processorTypeId: 'ptMix', durationMs: 40_000 },
+      { id: 'bottle', sequence: 2, name: 'Bottle', processorTypeId: 'ptFill', durationMs: 20_000, maxLagMs: 10_000 },
+    ],
+  });
+  next.batches.push({
+    id: 'batch-3',
+    batchTypeId: 'bt-tonic',
+    releaseTimeMs: 5_000,
+    dueTimeMs: 110_000,
+    lotId: 'LOT-003',
+  });
+
+  if (next.schedule) {
+    next.schedule.scheduledSteps.push(
+      {
+        id: 'sched-b3-premix',
+        batchId: 'batch-3',
+        routeStepTemplateId: 'premix',
+        processorInstanceId: 'mx-1',
+        startMs: 5_000,
+        endMs: 45_000,
+      },
+      {
+        id: 'sched-b3-bottle',
+        batchId: 'batch-3',
+        routeStepTemplateId: 'bottle',
+        processorInstanceId: 'fl-2',
+        startMs: 50_000,
+        endMs: 70_000,
+      },
+    );
+    next.schedule.notes = 'Second line filler and alternate product route';
+  }
+
+  return next;
+};
+
 export function composeBatchFlowSampleModel(
   ...transforms: readonly BatchFlowSampleTransform[]
 ): BatchFlowDomainModel {
@@ -172,6 +257,18 @@ const SAMPLE_DEFINITIONS = [
     label: 'Tight max-lag pressure',
     description: 'Keeps the same route but tightens the fill lag to pressure temporal constraints.',
     build: () => composeBatchFlowSampleModel(tightenFillMaxLag),
+  },
+  {
+    id: 'shared-filler',
+    label: 'Shared filler bottleneck',
+    description: 'Adds a second juice batch that must share the same filler, increasing machine no-overlap pressure.',
+    build: () => composeBatchFlowSampleModel(addSecondJuiceBatchSharingFiller),
+  },
+  {
+    id: 'second-line',
+    label: 'Second line / alternate product',
+    description: 'Adds a second filler line and a second batch type to widen machine eligibility and route diversity.',
+    build: () => composeBatchFlowSampleModel(addSecondLineAndFiller),
   },
 ] as const;
 

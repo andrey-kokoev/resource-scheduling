@@ -9,6 +9,8 @@ import {
   createSampleBatchFlowModel,
   listBatchFlowSamples,
   addSecondMixerAndSecondBatch,
+  addSecondJuiceBatchSharingFiller,
+  addSecondLineAndFiller,
   tightenFillMaxLag,
 } from './sample.js';
 import { buildBatchFlowSolution } from './solution.js';
@@ -482,10 +484,16 @@ test('sample flow compiles and yields a stable solution shape', () => {
 test('batch-flow samples are composed from base plus pure transforms', () => {
   const multiBatch = composeBatchFlowSampleModel(addSecondMixerAndSecondBatch);
   const tightLag = composeBatchFlowSampleModel(tightenFillMaxLag);
+  const sharedFiller = composeBatchFlowSampleModel(addSecondJuiceBatchSharingFiller);
+  const secondLine = composeBatchFlowSampleModel(addSecondLineAndFiller);
 
   assert.equal(multiBatch.batches.length, 2);
   assert.equal(multiBatch.processorInstances.length, 3);
   assert.equal(tightLag.batchTypes[0].route[0].maxLagMs, 5_000);
+  assert.equal(sharedFiller.batches.length, 2);
+  assert.equal(sharedFiller.schedule?.scheduledSteps.length, 4);
+  assert.equal(secondLine.processorInstances.length, 3);
+  assert.equal(secondLine.batchTypes.length, 2);
   assert.equal(createBaseBatchFlowModel().batches.length, 1);
 });
 
@@ -494,8 +502,10 @@ test('batch-flow sample catalog exposes multiple named scenarios', () => {
 
   assert.deepEqual(
     samples.map(sample => sample.id),
-    ['base', 'multi-batch', 'tight-max-lag'],
+    ['base', 'multi-batch', 'tight-max-lag', 'shared-filler', 'second-line'],
   );
   assert.ok(compileSampleBatchFlow('multi-batch').ok);
   assert.ok(compileSampleBatchFlow('tight-max-lag').ok);
+  assert.ok(compileSampleBatchFlow('shared-filler').ok);
+  assert.ok(compileSampleBatchFlow('second-line').ok);
 });
