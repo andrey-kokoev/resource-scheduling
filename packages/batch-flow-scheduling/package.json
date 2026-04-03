@@ -6,8 +6,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "../staffing-scheduling/node_modules/.bin/tsc",
-    "typecheck": "../staffing-scheduling/node_modules/.bin/tsc --noEmit"
+    "build": "../staffing-scheduling/node_modules/.bin/tsc && node ../../scripts/build-package-docs.mjs .",
+    "build:docs": "node ../../scripts/build-package-docs.mjs .",
+    "typecheck": "../staffing-scheduling/node_modules/.bin/tsc --noEmit",
+    "test": "node --test dist/test-validation.js"
   },
   "keywords": [],
   "author": "",

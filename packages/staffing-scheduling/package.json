@@ -6,7 +6,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node ../../scripts/build-package-docs.mjs .",
+    "build:docs": "node ../../scripts/build-package-docs.mjs .",
     "typecheck": "tsc --noEmit",
     "test": "node --test dist/tests/**/*.test.js"
   },

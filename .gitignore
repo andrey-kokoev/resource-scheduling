@@ -1,5 +1,6 @@
 node_modules
 dist
+dist-docs
 build
 .turbo
 .DS_Store

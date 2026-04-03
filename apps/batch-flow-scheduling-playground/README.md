@@ -1,12 +1,17 @@
 # Batch Flow Scheduling Playground
 
-This is the parallel playground slot for the future `batch-flow-scheduling` package.
+This is the parallel playground for `batch-flow-scheduling`.
 
-It exists now so the repo has a clean top-level split:
+Current scope:
 
-- `packages/staffing-scheduling`
-- `packages/batch-flow-scheduling`
-- `apps/staffing-scheduling-playground`
-- `apps/batch-flow-scheduling-playground`
+- render the package sample model
+- show the compiled solver-neutral graph summary
+- show the stable solution shape
+- stay thin and explanatory
 
-No interactive UI is implemented here yet.
+Run:
+
+```bash
+pnpm --filter batch-flow-scheduling-playground build
+pnpm --filter batch-flow-scheduling-playground dev
+```

@@ -5,46 +5,192 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Batch Flow Scheduling Playground</title>
     <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4efe7;
+        --panel: #fffaf2;
+        --panel-strong: #f8efe2;
+        --border: #d6c6b6;
+        --ink: #231a14;
+        --muted: #695a4f;
+        --accent: #8d4f24;
+        --accent-soft: #ead4be;
+        --ok: #2d6a4f;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
       body {
         margin: 0;
-        padding: 2rem;
-        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: #f6f2eb;
-        color: #201a17;
+        background:
+          radial-gradient(circle at top left, #f9e9d6 0, transparent 28%),
+          linear-gradient(180deg, #f4efe7 0%, #efe4d8 100%);
+        color: var(--ink);
+        font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
       }
+
       main {
-        max-width: 760px;
+        max-width: 1180px;
         margin: 0 auto;
-        background: #fffaf4;
-        border: 1px solid #daccc0;
-        border-radius: 18px;
-        padding: 1.25rem 1.4rem;
+        padding: 2rem 1.25rem 3rem;
       }
-      h1 {
+
+      .hero {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 1.4fr 0.8fr;
+        align-items: start;
+        margin-bottom: 1.5rem;
+      }
+
+      .hero-card,
+      .panel {
+        background: rgba(255, 250, 242, 0.92);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        box-shadow: 0 14px 40px rgba(75, 47, 24, 0.08);
+      }
+
+      .hero-card {
+        padding: 1.5rem;
+      }
+
+      .hero h1 {
+        margin: 0 0 0.5rem;
+        font-size: clamp(2.2rem, 6vw, 4.2rem);
+        line-height: 0.95;
+      }
+
+      .eyebrow {
         margin: 0 0 0.75rem;
-        font-size: clamp(2rem, 4vw, 3rem);
+        color: var(--accent);
+        font-size: 0.9rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
       }
-      p {
+
+      .hero p,
+      .panel p {
+        margin: 0;
         line-height: 1.6;
+        color: var(--muted);
       }
+
+      .status-card {
+        padding: 1.25rem;
+        background: var(--panel-strong);
+      }
+
+      .status-card h2 {
+        margin: 0 0 0.6rem;
+        font-size: 1.1rem;
+      }
+
+      .pill {
+        display: inline-block;
+        padding: 0.2rem 0.55rem;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 0.85rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .panel {
+        padding: 1.15rem 1.2rem;
+      }
+
+      .panel h2 {
+        margin: 0 0 0.9rem;
+        font-size: 1.2rem;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.75rem;
+      }
+
+      .metric {
+        padding: 0.8rem 0.9rem;
+        border-radius: 16px;
+        background: #fff;
+        border: 1px solid #e8dcca;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 1.4rem;
+      }
+
+      .metric span {
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 0.65rem 0.35rem;
+        border-bottom: 1px solid #eadfce;
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--muted);
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+
+      .stack {
+        display: grid;
+        gap: 0.85rem;
+      }
+
+      .callout {
+        padding: 0.9rem 1rem;
+        border-radius: 16px;
+        background: #fff;
+        border: 1px solid #eadfce;
+      }
+
+      .callout strong {
+        color: var(--ok);
+      }
+
       code {
-        background: #f1e7dc;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+        background: #f3e8da;
         padding: 0.1rem 0.35rem;
         border-radius: 6px;
+      }
+
+      @media (max-width: 900px) {
+        .hero,
+        .grid,
+        .metrics {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
   <body>
-    <main>
-      <h1>Batch Flow Scheduling Playground</h1>
-      <p>
-        This placeholder exists so the repository has a parallel playground slot for the future
-        <code>batch-flow-scheduling</code> package.
-      </p>
-      <p>
-        The staffing evaluator lives in <code>apps/staffing-scheduling-playground</code>. This sibling app is reserved
-        for line, batch, and flow scheduling once that package surface is ready.
-      </p>
-    </main>
+    <main id="app"></main>
+    <script type="module" src="./playground.js"></script>
   </body>
 </html>

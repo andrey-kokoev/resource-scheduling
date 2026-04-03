@@ -1,5 +1,9 @@
 {
   "name": "batch-flow-scheduling-playground",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "build": "pnpm --filter batch-flow-scheduling build && ../staffing-scheduling-playground/node_modules/.bin/vite build",
+    "dev": "../staffing-scheduling-playground/node_modules/.bin/vite"
+  }
 }
