@@ -185,10 +185,14 @@
           The core question is simple: can a set of time-bounded staffing needs be filled by qualified, available
           candidates without violating hard rules?
         </p>
-        <p class="muted">
-          If your mental model includes sequencing, optimization, overtime choice-making, or production flow, that is
-          already beyond this boundary.
-        </p>
+      <p class="muted">
+        If your mental model includes sequencing, optimization, overtime choice-making, or production flow, that is
+        already beyond this boundary.
+      </p>
+      <p class="muted">
+        Recurrence types now exist in the package surface, but recurrence expansion is still not available as
+        end-user behavior. The current boundary keeps recurrence domain-side and finite-horizon focused.
+      </p>
       </section>
 
       <div class="grid">
@@ -206,6 +210,7 @@
               <tr><td>Candidate</td><td>A person who may be eligible, subject to qualifications and availability.</td></tr>
               <tr><td>Qualifications</td><td>Exact-match capabilities with validity windows.</td></tr>
               <tr><td>Availability / rules</td><td>Hard limits such as time off, shift-pattern rules, rest, and utilization max.</td></tr>
+              <tr><td>Recurrence</td><td>Domain-side template and exception types exist; expansion into concrete input is still planned.</td></tr>
             </tbody>
           </table>
         </section>
@@ -264,8 +269,8 @@
               <tr>
                 <td><strong>Not modeled yet but plausible next expansions</strong></td>
                 <td>
-                  Overtime cost, preference weights, richer site/line hierarchy, substitution lattices, and more
-                  advanced staffing policy layers.
+                  Overtime cost, preference weights, richer site/line hierarchy, recurrence templates and exceptions,
+                  substitution lattices, and more advanced staffing policy layers.
                 </td>
               </tr>
               <tr>

@@ -27,6 +27,7 @@ It answers one question:
 - multi-site / line-aware coverage regrouping metadata
 - explanation regrouping from primitive failures to domain terms
 - shared runtime sample catalog for playground and sweep fixtures
+- recurrence domain types and a boundary entry point
 
 ## Preferred Usage Flow
 
@@ -67,6 +68,7 @@ If you want a boundary-first explanation of what enters and leaves the solver, s
 - no partial-fill success mode
 - no preference or fairness layer
 - no qualification substitution lattice
+- no recurring scheduling in the primitive solver boundary; recurrence is a planned / likely domain-side expansion
 - no production sequencing or machine-job planning
 - no line-level sequencing or production-flow modeling
 
@@ -82,6 +84,9 @@ The current intended boundary is:
 - `Line` scopes needs and line-local coverage rules
 - coverage rules may also scope to a site for site-local staffing expectations
 - regrouped explanations should preserve site and line identifiers for callers
+- recurrence remains a domain-layer compilation concern that expands to finite concrete input before solve time
+
+That recurrence boundary is already represented in the package surface by recurrence domain types and a boundary entry point. The first-pass solver behavior still does not expand recurring templates for end users.
 
 Site-aware coverage rule scoping is now implemented.
 
@@ -94,3 +99,8 @@ The next support slice within that milestone is **line-aware regrouping metadata
 - [EXAMPLES.md](./EXAMPLES.md)
 - [EXPLANATIONS.md](./EXPLANATIONS.md)
 - [CONTRACT.md](./CONTRACT.md)
+- [RECURRING-IMPLEMENTATION-QUEUE.md](./RECURRING-IMPLEMENTATION-QUEUE.md)
+- [RECURRING-FIRST-CASES.md](./RECURRING-FIRST-CASES.md)
+- [RECURRING-SCHEDULING.md](./RECURRING-SCHEDULING.md)
+- [BASELINE-REPAIR-WORKFLOW.md](./BASELINE-REPAIR-WORKFLOW.md)
+- [BASELINE-REPAIR-REVIEW.md](./BASELINE-REPAIR-REVIEW.md)

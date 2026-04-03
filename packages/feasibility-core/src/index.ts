@@ -37,6 +37,12 @@
 // Keep this first so external callers can treat it as the default entry path.
 export type {
   DateString,
+  Weekday,
+  RecurrenceFrequency,
+  RecurrenceExceptionKind,
+  RecurrenceExceptionTargetKind,
+  RecurrenceRule,
+  ExpansionHorizon,
   Site,
   Line,
   Shift,
@@ -47,6 +53,40 @@ export type {
   PositionQualification,
   CandidateQualification,
   CandidateAvailability,
+  RecurringShiftTemplate,
+  RecurringNeedTemplate,
+  RecurringAvailabilityTemplate,
+  RecurringExceptionRecord,
+  RecurrenceExpansionResult,
+  RecurrenceExpansionError,
+  RecurrenceExpansionErrorType,
+  RecurringExpansionSummary,
+  HardLock,
+  HardLockPreassignment,
+  PreassignedAssignment,
+  RetainedBaselinePreassignment,
+  ConcreteSolveAttempt,
+  CopiedBaselineAssignment,
+  CopiedBaselineRetentionAnnotation,
+  CopiedBaselineRemovedAssignmentDelta,
+  CopiedBaselineAddedNeedDelta,
+  CopiedBaselineRemovedNeedDelta,
+  CopiedBaselineChangedShiftDelta,
+  CopiedBaselineChangedAvailabilityDelta,
+  CopiedBaselineDelta,
+  CopiedBaselineState,
+  RepairAttemptStage,
+  RepairAttemptCompilationInput,
+  RetainedCopiedBaselineAssignment,
+  ReleasedCopiedBaselineAssignment,
+  RepairAttemptOpenGap,
+  RepairAttemptHardLockConflict,
+  RepairAttemptCompilationResult,
+  RepairOrchestrationInput,
+  RepairOrchestrationAttemptResult,
+  RepairOrchestrationResult,
+  RepairAttemptSummary,
+  RepairResult,
   ShiftPatternRule,
   MinimumRestRule,
   ConsecutiveWorkRule,
@@ -55,6 +95,20 @@ export type {
   DomainInput,
 } from './domain/index.js';
 export { compileDomain, buildEligibility } from './domain/compiler.js';
+export { expandRecurringDomain } from './domain/recurrence.js';
+export { buildConcreteSolveAttempt } from './domain/hard-locks.js';
+export {
+  STRONGEST_REPAIR_ATTEMPT_STAGE,
+  KEEP_CANDIDATE_SHIFT_REPAIR_ATTEMPT_STAGE,
+  FULL_RELEASE_REPAIR_ATTEMPT_STAGE,
+  compileRepairAttempt,
+} from './domain/repair-attempt.js';
+export {
+  runRepairOrchestration,
+} from './domain/repair-orchestrator.js';
+export {
+  repairCopiedBaseline,
+} from './domain/repair.js';
 export { solve, explainInfeasibility } from './solver/index.js';
 export { buildRegroupingContext, regroupToDomainExplanations } from './explanations.js';
 export type * from './explanations.js';

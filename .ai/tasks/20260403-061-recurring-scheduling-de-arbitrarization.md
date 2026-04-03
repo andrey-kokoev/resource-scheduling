@@ -78,3 +78,54 @@ A clear primitive/derived split for recurring scheduling, including:
 - the main recurring-scheduling ambiguities are explicit
 - primitive vs derived boundaries are proposed
 - the task leaves the system with a sharper next modeling question, not a vaguer feature label
+
+## First Pass
+
+### Candidate recurring constructs
+
+The domain can plausibly contain recurring versions of:
+
+- shift templates
+- need templates
+- candidate availability templates
+- shift-pattern/rule templates
+- recurrence exceptions
+
+### Recommended primitive / derived split
+
+Keep these **derived / domain-side only**:
+
+- recurring shift templates
+- recurring need templates
+- recurring availability templates
+- recurrence rules like daily / weekly / weekday-set
+- exception authoring
+- future-suffix overrides
+
+Reason:
+
+- the current solver already wants concrete finite intervals
+- recurrence is not itself a feasibility relation
+- recurrence mostly describes how to generate concrete domain instances
+
+Keep these **primitive / solver-visible** only after compilation:
+
+- concrete shifts
+- concrete needs
+- concrete availability windows
+- concrete rule applications
+- concrete exceptions after they have been applied to generated instances
+
+### Current recommendation
+
+Recurring scheduling should **not** enter the primitive solver as a first-class concept in the next step.
+
+Instead:
+
+- recurrence should live at the domain compilation boundary
+- recurrence expands into finite concrete `DomainInput`
+- the solver continues to reason only over concrete intervals and concrete demand
+
+### Sharper next question
+
+If recurrence is compiled away, what exact recurrence template model and exception model are needed at the domain layer so that finite expansion stays coherent and predictable?

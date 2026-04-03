@@ -8,6 +8,41 @@ import type { Id, Interval } from '../primitive/types.js';
 /** Calendar date (YYYY-MM-DD) */
 export type DateString = string;
 
+/** Weekday values used by the first-pass recurrence rule */
+export type Weekday =
+  | 'mon'
+  | 'tue'
+  | 'wed'
+  | 'thu'
+  | 'fri'
+  | 'sat'
+  | 'sun';
+
+/** Recurrence frequency supported in the first pass */
+export type RecurrenceFrequency = 'weekly';
+
+/** Exception operation supported in the first pass */
+export type RecurrenceExceptionKind = 'skip' | 'modify' | 'override-future';
+
+/** Template kind that a recurrence exception may target */
+export type RecurrenceExceptionTargetKind =
+  | 'shift-template'
+  | 'need-template'
+  | 'availability-template';
+
+/** Minimal recurring rule shape for domain-side expansion */
+export interface RecurrenceRule {
+  readonly frequency: RecurrenceFrequency;
+  readonly interval?: number;
+  readonly weekdaySet: readonly Weekday[];
+}
+
+/** Explicit finite horizon used when expanding recurring templates */
+export interface ExpansionHorizon {
+  readonly expandFrom: DateString;
+  readonly expandUntil: DateString;
+}
+
 /** A physical site or plant location */
 export interface Site {
   readonly id: Id;
@@ -66,6 +101,52 @@ export interface CandidateAvailability {
   readonly reason?: string;
 }
 
+/** Recurring shift template that expands into concrete shifts */
+export interface RecurringShiftTemplate {
+  readonly id: Id;
+  readonly siteId?: Id;
+  readonly shiftFamilyId?: Id;
+  readonly startTime: string;
+  readonly endTime: string;
+  readonly recurrenceRule: RecurrenceRule;
+  readonly activeFrom: DateString;
+  readonly activeUntil?: DateString;
+}
+
+/** Recurring staffing demand template attached to recurring shifts */
+export interface RecurringNeedTemplate {
+  readonly id: Id;
+  readonly recurringShiftTemplateId: Id;
+  readonly lineId?: Id;
+  readonly positionId: Id;
+  readonly count: number;
+  readonly activeFrom: DateString;
+  readonly activeUntil?: DateString;
+}
+
+/** Recurring candidate availability or unavailability template */
+export interface RecurringAvailabilityTemplate {
+  readonly id: Id;
+  readonly candidateId: Id;
+  readonly kind: 'available' | 'unavailable';
+  readonly startTime: string;
+  readonly endTime: string;
+  readonly recurrenceRule: RecurrenceRule;
+  readonly activeFrom: DateString;
+  readonly activeUntil?: DateString;
+  readonly reason?: string;
+}
+
+/** First-pass recurrence exception record */
+export interface RecurringExceptionRecord {
+  readonly id: Id;
+  readonly targetKind: RecurrenceExceptionTargetKind;
+  readonly targetId: Id;
+  readonly kind: RecurrenceExceptionKind;
+  readonly effectiveFrom?: DateString;
+  readonly metadata?: Readonly<Record<string, string | number | boolean>>;
+}
+
 /** Candidate-specific shift-pattern compatibility rule */
 export interface ShiftPatternRule {
   readonly id: Id;
@@ -93,6 +174,34 @@ export interface ConsecutiveWorkRule {
   readonly candidateId: Id;
   readonly maxDays: number;
 }
+
+/** Workflow-layer hard lock that must be preserved in a concrete attempt */
+export interface HardLock {
+  readonly id: Id;
+  readonly agentId: Id;
+  readonly demandUnitId: Id;
+  readonly reason?: string;
+  readonly metadata?: Readonly<Record<string, string | number | boolean>>;
+}
+
+/** Concrete assignment produced from a hard lock for a specific solve attempt */
+export interface HardLockPreassignment {
+  readonly kind: 'hard-lock';
+  readonly agentId: Id;
+  readonly demandUnitId: Id;
+  readonly hardLockId: Id;
+}
+
+/** Concrete assignment retained from a copied baseline for a specific attempt */
+export interface RetainedBaselinePreassignment {
+  readonly kind: 'retained-baseline';
+  readonly agentId: Id;
+  readonly demandUnitId: Id;
+  readonly assignmentId: Id;
+}
+
+/** Pre-assigned assignment boundary passed into a concrete solve attempt */
+export type PreassignedAssignment = HardLockPreassignment | RetainedBaselinePreassignment;
 
 /** Cross-position, site-level, or line-level coverage rule */
 export interface CoverageRule {
@@ -152,4 +261,16 @@ export interface DomainInput {
   readonly minimumRestRules?: readonly MinimumRestRule[];
   readonly consecutiveWorkRules?: readonly ConsecutiveWorkRule[];
   readonly coverageRules?: readonly CoverageRule[];
+  readonly recurringShiftTemplates?: readonly RecurringShiftTemplate[];
+  readonly recurringNeedTemplates?: readonly RecurringNeedTemplate[];
+  readonly recurringAvailabilityTemplates?: readonly RecurringAvailabilityTemplate[];
+  readonly recurrenceExceptions?: readonly RecurringExceptionRecord[];
+  readonly expansionHorizon?: ExpansionHorizon;
+}
+
+/** The concrete finite solve-attempt boundary consumed by the solver */
+export interface ConcreteSolveAttempt {
+  readonly input: DomainInput;
+  readonly hardLocks: readonly HardLock[];
+  readonly preassignedAssignments: readonly PreassignedAssignment[];
 }
