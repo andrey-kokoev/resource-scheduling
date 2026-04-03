@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feasibility Playground Docs</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f2eb;
+        --panel: #fffaf4;
+        --ink: #201a17;
+        --muted: #655b54;
+        --accent: #8a4b2f;
+        --accent-2: #215e63;
+        --border: #daccc0;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(180deg, #fbf7f1 0%, var(--bg) 100%);
+        color: var(--ink);
+      }
+      header, main {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
+      header { padding-top: 2rem; }
+      h1 {
+        margin: 0 0 0.5rem;
+        font-size: clamp(2rem, 4vw, 3rem);
+      }
+      .lede {
+        margin: 0;
+        max-width: 80ch;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .nav {
+        margin-top: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      a.button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.7rem 1rem;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid var(--border);
+        color: var(--ink);
+        background: rgba(255, 250, 244, 0.9);
+      }
+      a.button.primary {
+        background: var(--accent);
+        color: white;
+        border-color: transparent;
+      }
+      main {
+        display: grid;
+        gap: 1rem;
+        padding-top: 1.5rem;
+        padding-bottom: 2rem;
+      }
+      section {
+        background: rgba(255, 250, 244, 0.94);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: 0 12px 40px rgba(69, 47, 33, 0.08);
+        padding: 1rem 1.1rem;
+      }
+      h2 {
+        margin: 0 0 0.45rem;
+        font-size: 1rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--accent-2);
+      }
+      p, li { line-height: 1.6; }
+      .grid {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      @media (max-width: 900px) {
+        .grid { grid-template-columns: 1fr; }
+      }
+      .page-card {
+        border: 1px solid #eadfd5;
+        border-radius: 14px;
+        background: #fffdfb;
+        padding: 0.9rem 1rem;
+      }
+      .page-card + .page-card { margin-top: 0.75rem; }
+      .page-card h3 {
+        margin: 0 0 0.25rem;
+        font-size: 0.95rem;
+      }
+      .page-card p {
+        margin: 0 0 0.6rem;
+        color: var(--muted);
+      }
+      ul {
+        margin: 0.5rem 0 0;
+        padding-left: 1.25rem;
+      }
+      code {
+        background: #f1e7dc;
+        padding: 0.1rem 0.35rem;
+        border-radius: 6px;
+      }
+      .note {
+        background: #f7efe6;
+        border-left: 4px solid var(--accent);
+        padding: 0.9rem 1rem;
+        border-radius: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Feasibility Playground Docs</h1>
+      <p class="lede">
+        A short navigation page for the playground docs surface. Use this when you want to choose the right page
+        before reading the details.
+      </p>
+      <div class="nav">
+        <a class="button primary" href="./index.html">Open playground</a>
+        <a class="button" href="./boundary.html">Boundary guide</a>
+        <a class="button" href="./category-theoretic-boundary.html">Abstract companion</a>
+        <a class="button" href="./package-overview.html">Package overview</a>
+        <a class="button" href="./examples-overview.html">Examples overview</a>
+        <a class="button" href="./feature-matrix.html">Feature matrix</a>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <h2>What each page is for</h2>
+        <div class="grid">
+          <div class="page-card">
+            <h3><a href="./boundary.html">Boundary guide</a></h3>
+            <p>Explains the line between caller-domain staffing problems and the current feasibility kernel.</p>
+          </div>
+          <div class="page-card">
+            <h3><a href="./category-theoretic-boundary.html">Abstract companion</a></h3>
+            <p>Restates the same boundary in object/morphism language for advanced readers and machine consumers.</p>
+          </div>
+          <div class="page-card">
+            <h3><a href="./package-overview.html">Package overview</a></h3>
+            <p>Summarizes the package contract, recommended flow, and what the solver does and does not do.</p>
+          </div>
+          <div class="page-card">
+            <h3><a href="./examples-overview.html">Examples overview</a></h3>
+            <p>Shows a few concrete scenarios and how they map to the current compile / solve / regroup path.</p>
+          </div>
+          <div class="page-card">
+            <h3><a href="./feature-matrix.html">Feature matrix</a></h3>
+            <p>Lists current support, deferred areas, and the conservative read on package fit.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Suggested reading order</h2>
+        <ol>
+          <li>Boundary guide for the mental model.</li>
+          <li>Abstract companion for the category-theoretic boundary view.</li>
+          <li>Package overview for the recommended caller flow.</li>
+          <li>Examples overview for concrete usage.</li>
+          <li>Feature matrix for current support and out-of-scope areas.</li>
+        </ol>
+      </section>
+
+      <section class="note">
+        This page is intentionally light. It points at the companion docs rather than repeating them.
+      </section>
+    </main>
+  </body>
+</html>
