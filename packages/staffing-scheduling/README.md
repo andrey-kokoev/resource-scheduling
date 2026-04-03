@@ -8,10 +8,14 @@ It answers one question:
 
 ## Start Here
 
-1. Read [EXAMPLES.md](./EXAMPLES.md) for the recommended caller flow.
-2. Read [EXPLANATIONS.md](./EXPLANATIONS.md) to see how failures are regrouped.
-3. Read [CONTRACT.md](./CONTRACT.md) for the semantic boundary.
-4. Use the rule docs when you need family-specific behavior:
+1. Read [docs/001-what-this-is.md](./docs/001-what-this-is.md) for the package identity.
+2. Read [docs/002-invariants.md](./docs/002-invariants.md) for the non-negotiable semantics.
+3. Read [docs/003-solver-graph.md](./docs/003-solver-graph.md) for the compiled solver-facing view.
+4. Then use the operational docs:
+   - [EXAMPLES.md](./EXAMPLES.md)
+   - [EXPLANATIONS.md](./EXPLANATIONS.md)
+   - [CONTRACT.md](./CONTRACT.md)
+5. Use the rule docs when you need family-specific behavior:
    - [AVAILABILITY.md](./AVAILABILITY.md)
    - [PATTERN-COMPATIBILITY.md](./PATTERN-COMPATIBILITY.md)
    - [COVERAGE-RULES.md](./COVERAGE-RULES.md)
@@ -72,35 +76,7 @@ If you want a boundary-first explanation of what enters and leaves the solver, s
 - no production sequencing or machine-job planning
 - no line-level sequencing or production-flow modeling
 
-## Next Domain Milestone
+## Deeper Design Docs
 
-The next explicit domain-expansion milestone is **multi-site / line-level domain structure** for manufacturing and facility staffing.
-
-That milestone is about modeling site or line-local coverage requirements more directly. Site and line should remain domain metadata that show up on regrouped coverage explanations, not new primitive witness families. It is not about optimization, overtime, or production sequencing.
-
-The current intended boundary is:
-
-- `Site` scopes shifts and site-local staffing context
-- `Line` scopes needs and line-local coverage rules
-- coverage rules may also scope to a site for site-local staffing expectations
-- regrouped explanations should preserve site and line identifiers for callers
-- recurrence remains a domain-layer compilation concern that expands to finite concrete input before solve time
-
-That recurrence boundary is already represented in the package surface by recurrence domain types and a boundary entry point. The first-pass solver behavior still does not expand recurring templates for end users.
-
-Site-aware coverage rule scoping is now implemented.
-
-The next support slice within that milestone is **line-aware regrouping metadata**.
-
-## Orientation Docs
-
-- [READINESS.md](./READINESS.md)
-- [NEXT-MILESTONE.md](./NEXT-MILESTONE.md)
-- [EXAMPLES.md](./EXAMPLES.md)
-- [EXPLANATIONS.md](./EXPLANATIONS.md)
-- [CONTRACT.md](./CONTRACT.md)
-- [RECURRING-IMPLEMENTATION-QUEUE.md](./RECURRING-IMPLEMENTATION-QUEUE.md)
-- [RECURRING-FIRST-CASES.md](./RECURRING-FIRST-CASES.md)
-- [RECURRING-SCHEDULING.md](./RECURRING-SCHEDULING.md)
-- [BASELINE-REPAIR-WORKFLOW.md](./BASELINE-REPAIR-WORKFLOW.md)
-- [BASELINE-REPAIR-REVIEW.md](./BASELINE-REPAIR-REVIEW.md)
+- [docs/010-baseline-repair-workflow.md](./docs/010-baseline-repair-workflow.md)
+- [docs/011-recurring-scheduling-boundary.md](./docs/011-recurring-scheduling-boundary.md)
