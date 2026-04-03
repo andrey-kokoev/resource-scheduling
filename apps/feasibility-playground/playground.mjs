@@ -88,6 +88,115 @@ function renderAssignments(assignments) {
   `;
 }
 
+function renderRepairAssignments(assignments) {
+  if (assignments.length === 0) {
+    return '';
+  }
+
+  const rows = assignments.map(row => `
+    <tr>
+      <td>${escapeHtml(row.candidateName)}</td>
+      <td>${escapeHtml(row.siteName)}</td>
+      <td>${escapeHtml(row.lineName)}</td>
+      <td>${escapeHtml(row.shiftId)} / ${escapeHtml(row.shiftDate)}</td>
+      <td>${escapeHtml(row.positionName)}</td>
+    </tr>
+  `).join('');
+
+  return `
+    <section class="need-card">
+      <h3>Final assignments</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Candidate</th>
+            <th>Site</th>
+            <th>Line</th>
+            <th>Shift</th>
+            <th>Position</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </section>
+  `;
+}
+
+function renderRepairReport(report, repairResult, assignments) {
+  const attemptItems = repairResult.attempts.map(attempt => `
+    <li>
+      <span class="pill ${attempt.outcome === 'feasible' ? 'ok' : 'bad'}">${escapeHtml(attempt.stage)}</span>
+      ${escapeHtml(attempt.outcome)}
+    </li>
+  `).join('');
+
+  const assignmentList = (items, emptyText) => {
+    if (items.length === 0) {
+      return `<p class="hint">${escapeHtml(emptyText)}</p>`;
+    }
+
+    return `
+      <ul>
+        ${items.map(item => `
+          <li>
+            ${escapeHtml(item.assignmentId)} · ${escapeHtml(item.agentId)} → ${escapeHtml(item.demandUnitId)}
+          </li>
+        `).join('')}
+      </ul>
+    `;
+  };
+
+  const needList = report.needs.length === 0
+    ? '<p class="hint">No open or infeasible needs remain after the selected stage.</p>'
+    : `
+      <ul>
+        ${report.needs.map(need => `
+          <li>
+            ${escapeHtml(need.needId)} · ${escapeHtml(need.status)} · ${escapeHtml(String(need.coveredCount))}/${escapeHtml(String(need.requiredCount))} covered
+          </li>
+        `).join('')}
+      </ul>
+    `;
+
+  resultPanel.innerHTML = `
+    <div>
+      <span class="pill ${report.outcome === 'feasible' ? 'ok' : 'bad'}">${report.outcome === 'feasible' ? 'Repair feasible' : 'Repair infeasible'}</span>
+      <p class="hint">This sample runs the public baseline-repair API rather than the direct solve path.</p>
+      <section class="need-card">
+        <h3>Repair summary</h3>
+        <ul>
+          <li>Selected stage: ${escapeHtml(report.selectedStage)}</li>
+          <li>Outcome: ${escapeHtml(report.outcome)}</li>
+          <li>Preserved assignments: ${escapeHtml(String(report.preservedAssignments.length))}</li>
+          <li>Degraded assignments: ${escapeHtml(String(report.degradedAssignments.length))}</li>
+          <li>Released assignments: ${escapeHtml(String(report.releasedAssignments.length))}</li>
+        </ul>
+      </section>
+      <section class="need-card">
+        <h3>Repair ladder</h3>
+        <ul>${attemptItems}</ul>
+      </section>
+      <section class="need-card">
+        <h3>Preserved exactly</h3>
+        ${assignmentList(report.preservedAssignments, 'No copied baseline assignments were preserved exactly.')}
+      </section>
+      <section class="need-card">
+        <h3>Degraded or relaxed</h3>
+        ${assignmentList(report.degradedAssignments, 'No copied baseline assignments were degraded at the selected stage.')}
+      </section>
+      <section class="need-card">
+        <h3>Released</h3>
+        ${assignmentList(report.releasedAssignments, 'No copied baseline assignments were fully released.')}
+      </section>
+      <section class="need-card">
+        <h3>Remaining needs</h3>
+        ${needList}
+      </section>
+      ${renderRepairAssignments(assignments)}
+    </div>
+  `;
+}
+
 function explanationNeedIds(explanation, raw) {
   switch (explanation.type) {
     case 'no-eligible-candidate':
@@ -440,7 +549,15 @@ async function run() {
     const summary = summarizeScenario(raw);
     const selectedSample = getSampleScenario(sampleScenarioSelect.value);
 
-    if (evaluation.output.kind === 'feasible') {
+    if (evaluation.output.kind === 'repair') {
+      status.textContent = `${evaluation.output.repairReport.outcome === 'feasible' ? 'Repair feasible' : 'Repair infeasible'}: selected stage ${evaluation.output.repairReport.selectedStage}.`;
+      summaryPanel.innerHTML = renderScenarioSummary(summary, selectedSample);
+      renderRepairReport(
+        evaluation.output.repairReport,
+        evaluation.output.repairResult,
+        evaluation.output.assignments,
+      );
+    } else if (evaluation.output.kind === 'feasible') {
       status.textContent = `Feasible: ${evaluation.output.assignments.length} assignments across ${summary.shiftCount} shifts.`;
       summaryPanel.innerHTML = renderScenarioSummary(summary, selectedSample);
       renderAssignments(evaluation.output.assignments);

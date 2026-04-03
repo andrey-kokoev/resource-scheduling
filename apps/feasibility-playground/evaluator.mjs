@@ -23,6 +23,30 @@ function enrichAssignments(input, context, assignments) {
 }
 
 export async function evaluateScenario(input) {
+  if (input.mode === 'repair') {
+    const baselineState = input.repairBaselineState;
+    const repairResult = core.repairCopiedBaseline(baselineState);
+    const repairReport = core.buildStableRepairReport(baselineState);
+    const context = core.buildRegroupingContext(baselineState.targetInput);
+
+    return {
+      result: repairResult.solverResult,
+      context,
+      output: {
+        kind: 'repair',
+        repairResult,
+        repairReport,
+        assignments: repairResult.solverResult.feasible
+          ? enrichAssignments(
+              baselineState.targetInput,
+              context,
+              repairResult.solverResult.assignments,
+            )
+          : [],
+      },
+    };
+  }
+
   const solveInput = core.compileDomain(input);
   const result = core.solve(solveInput);
   const context = core.buildRegroupingContext(input);

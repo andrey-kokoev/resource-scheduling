@@ -87,6 +87,9 @@ export type {
   RepairOrchestrationResult,
   RepairAttemptSummary,
   RepairResult,
+  StableRepairReport,
+  RepairAssignmentReportItem,
+  RepairNeedReportItem,
   ShiftPatternRule,
   MinimumRestRule,
   ConsecutiveWorkRule,
@@ -108,6 +111,7 @@ export {
 } from './domain/repair-orchestrator.js';
 export {
   repairCopiedBaseline,
+  buildStableRepairReport,
 } from './domain/repair.js';
 export { solve, explainInfeasibility } from './solver/index.js';
 export { buildRegroupingContext, regroupToDomainExplanations } from './explanations.js';

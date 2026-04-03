@@ -352,6 +352,64 @@ function withCoverageRuleImpossible(seed: typeof basePlantScenario) {
   return scenario;
 }
 
+function buildBaselineRepairScenario() {
+  return {
+    mode: 'repair',
+    repairBaselineState: {
+      targetInput: {
+        sites: [
+          site('site-1', 'Plant A'),
+        ],
+        lines: [
+          line('line-a', 'site-1', 'Assembly'),
+        ],
+        shifts: [
+          shift('s1', '2026-04-07', '06:00', '14:00', { siteId: 'site-1', shiftFamilyId: 'day' }),
+        ],
+        positions: [
+          position('pOp', 'Operator'),
+        ],
+        needs: [
+          need('n1', 's1', 'pOp', 1, 'line-a'),
+          need('n2', 's1', 'pOp', 1, 'line-a'),
+        ],
+        candidates: [
+          candidate('c1', 'Priya'),
+          candidate('c2', 'Marco'),
+        ],
+        qualificationTypes: [
+          qualificationType('qOp', 'OperatorAuth'),
+        ],
+        positionQualifications: [
+          positionQualification('pOp', 'qOp', true),
+        ],
+        candidateQualifications: [
+          candidateQualification('c1', 'qOp', '2026-01-01T00:00:00'),
+          candidateQualification('c2', 'qOp', '2026-01-01T00:00:00'),
+        ],
+        candidateAvailability: [],
+        shiftPatternRules: [],
+        minimumRestRules: [],
+        consecutiveWorkRules: [],
+        coverageRules: [],
+        utilizationRules: [],
+      },
+      copiedAssignments: [
+        { id: 'ba-1', agentId: 'c1', demandUnitId: 'n1#0' },
+        { id: 'ba-2', agentId: 'c1', demandUnitId: 'n2#0' },
+      ],
+      hardLocks: [
+        { id: 'hl-1', agentId: 'c1', demandUnitId: 'n1#0' },
+      ],
+      retentionAnnotations: [
+        { assignmentId: 'ba-1', label: 'hard lock' },
+        { assignmentId: 'ba-2', label: 'keep candidate + shift + position' },
+      ],
+      deltas: [],
+    },
+  };
+}
+
 export const sampleScenarios: ReadonlyArray<SampleScenario> = [
   {
     id: 'base-feasible',
@@ -423,6 +481,13 @@ export const sampleScenarios: ReadonlyArray<SampleScenario> = [
     expected: { feasible: true, assignments: 4 },
     scenario: withLineScopedCoverage(basePlantScenario),
   },
+  {
+    id: 'baseline-repair',
+    label: 'Baseline repair flow',
+    description: 'Starts from a copied baseline, preserves what it can, and falls back through the repair ladder to fill the remaining gap.',
+    expected: { feasible: true, assignments: 2 },
+    scenario: buildBaselineRepairScenario(),
+  },
 ];
 
 export const samplePlantScenarioSeed = cloneScenario(basePlantScenario);
@@ -452,6 +517,24 @@ function hydrateAvailabilityWindow(window: {
 }
 
 export function hydrateScenario(raw: any) {
+  if (raw.mode === 'repair' && raw.repairBaselineState) {
+    return {
+      mode: 'repair' as const,
+      repairBaselineState: {
+        ...raw.repairBaselineState,
+        targetInput: hydrateDomainInput(raw.repairBaselineState.targetInput),
+        copiedAssignments: raw.repairBaselineState.copiedAssignments.map((assignment: any) => ({ ...assignment })),
+        hardLocks: raw.repairBaselineState.hardLocks.map((lock: any) => ({ ...lock })),
+        retentionAnnotations: raw.repairBaselineState.retentionAnnotations.map((annotation: any) => ({ ...annotation })),
+        deltas: raw.repairBaselineState.deltas.map((delta: any) => hydrateBaselineDelta(delta)),
+      },
+    };
+  }
+
+  return hydrateDomainInput(raw);
+}
+
+function hydrateDomainInput(raw: any) {
   return {
     ...raw,
     shifts: raw.shifts.map((shift: any) => ({ ...shift })),
@@ -477,28 +560,54 @@ export function hydrateScenario(raw: any) {
 }
 
 export function summarizeScenario(raw: any) {
+  const subject = raw.mode === 'repair' && raw.repairBaselineState
+    ? raw.repairBaselineState.targetInput
+    : raw;
+
   const ruleFamilies = [];
-  if ((raw.candidateAvailability?.length ?? 0) > 0) ruleFamilies.push('availability');
-  if ((raw.shiftPatternRules?.length ?? 0) > 0) ruleFamilies.push('pattern');
-  if ((raw.minimumRestRules?.length ?? 0) > 0) ruleFamilies.push('minimum rest');
-  if ((raw.consecutiveWorkRules?.length ?? 0) > 0) ruleFamilies.push('consecutive-work');
-  if ((raw.coverageRules?.length ?? 0) > 0) ruleFamilies.push('coverage');
-  if ((raw.utilizationRules?.length ?? 0) > 0) ruleFamilies.push('utilization');
+  if (raw.mode === 'repair') ruleFamilies.push('baseline repair');
+  if ((subject.candidateAvailability?.length ?? 0) > 0) ruleFamilies.push('availability');
+  if ((subject.shiftPatternRules?.length ?? 0) > 0) ruleFamilies.push('pattern');
+  if ((subject.minimumRestRules?.length ?? 0) > 0) ruleFamilies.push('minimum rest');
+  if ((subject.consecutiveWorkRules?.length ?? 0) > 0) ruleFamilies.push('consecutive-work');
+  if ((subject.coverageRules?.length ?? 0) > 0) ruleFamilies.push('coverage');
+  if ((subject.utilizationRules?.length ?? 0) > 0) ruleFamilies.push('utilization');
 
   const scopedCoverage = {
-    siteScoped: raw.coverageRules?.some((rule: any) => Boolean(rule.siteId)) ?? false,
-    lineScoped: raw.coverageRules?.some((rule: any) => Boolean(rule.lineId)) ?? false,
+    siteScoped: subject.coverageRules?.some((rule: any) => Boolean(rule.siteId)) ?? false,
+    lineScoped: subject.coverageRules?.some((rule: any) => Boolean(rule.lineId)) ?? false,
   };
 
   return {
-    siteCount: raw.sites?.length ?? 0,
-    lineCount: raw.lines?.length ?? 0,
-    shiftCount: raw.shifts.length,
-    needCount: raw.needs.length,
-    candidateCount: raw.candidates.length,
+    siteCount: subject.sites?.length ?? 0,
+    lineCount: subject.lines?.length ?? 0,
+    shiftCount: subject.shifts.length,
+    needCount: subject.needs.length,
+    candidateCount: subject.candidates.length,
     ruleFamilies,
     scopedCoverage,
   };
+}
+
+function hydrateBaselineDelta(delta: any) {
+  switch (delta.kind) {
+    case 'added-need':
+      return { ...delta, need: { ...delta.need } };
+    case 'changed-shift':
+      return {
+        ...delta,
+        before: { ...delta.before },
+        after: { ...delta.after },
+      };
+    case 'changed-availability':
+      return {
+        ...delta,
+        before: delta.before.map((window: any) => hydrateAvailabilityWindow(window)),
+        after: delta.after.map((window: any) => hydrateAvailabilityWindow(window)),
+      };
+    default:
+      return { ...delta };
+  }
 }
 
 export {

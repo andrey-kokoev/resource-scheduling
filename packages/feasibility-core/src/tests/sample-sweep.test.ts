@@ -1,8 +1,10 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import {
+  buildStableRepairReport,
   buildRegroupingContext,
   compileDomain,
+  repairCopiedBaseline,
   regroupToDomainExplanations,
   solve,
 } from '../index.js';
@@ -12,6 +14,36 @@ describe('shared sample sweep', () => {
   for (const sample of sampleScenarios) {
     it(`evaluates sample ${sample.id}: ${sample.label}`, () => {
       const input = hydrateScenario(sample.scenario);
+
+      if ((input as { mode?: string }).mode === 'repair') {
+        const repairInput = input as {
+          mode: 'repair';
+          repairBaselineState: Parameters<typeof repairCopiedBaseline>[0];
+        };
+        const result = repairCopiedBaseline(repairInput.repairBaselineState);
+
+        assert.strictEqual(result.outcome === 'feasible', sample.expected.feasible);
+
+        if (sample.expected.feasible) {
+          assert.strictEqual(result.solverResult.feasible, true);
+          if (result.solverResult.feasible) {
+            assert.strictEqual(
+              result.solverResult.assignments.length,
+              sample.expected.assignments ?? result.solverResult.assignments.length,
+            );
+          }
+        } else {
+          assert.strictEqual(result.solverResult.feasible, false);
+          const report = buildStableRepairReport(repairInput.repairBaselineState);
+          assert.ok(
+            report.needs.length > 0 || report.releasedAssignments.length > 0,
+            `Expected a non-empty repair report for ${sample.id}`,
+          );
+        }
+
+        return;
+      }
+
       const result = solve(compileDomain(input));
 
       assert.strictEqual(result.feasible, sample.expected.feasible);
