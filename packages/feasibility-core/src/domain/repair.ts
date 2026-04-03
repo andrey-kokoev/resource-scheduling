@@ -35,6 +35,19 @@ export interface RepairNeedReportItem {
   readonly status: 'open' | 'infeasible';
 }
 
+/** Assignment-level baseline-vs-final diff item for repaired schedules. */
+export interface RepairAssignmentDiffItem {
+  readonly demandUnitId: string;
+  readonly baselineAssignmentId?: string;
+  readonly baselineAgentId?: string;
+  readonly finalAgentId?: string;
+  readonly status:
+    | 'preserved-exactly'
+    | 'changed-assignee'
+    | 'released'
+    | 'newly-assigned';
+}
+
 /** Public caller-facing result for copied-baseline repair. */
 export interface RepairResult {
   readonly outcome: 'feasible' | 'infeasible';
@@ -51,6 +64,7 @@ export interface StableRepairReport {
   readonly degradedAssignments: readonly RepairAssignmentReportItem[];
   readonly releasedAssignments: readonly RepairAssignmentReportItem[];
   readonly needs: readonly RepairNeedReportItem[];
+  readonly assignmentDiff: readonly RepairAssignmentDiffItem[];
 }
 
 /**
@@ -101,6 +115,8 @@ export function buildStableRepairReport(
       : selectedAttempt.attempt.openGaps
           .map(toNeedReportItem)
           .sort(compareNeedReportItems),
+    assignmentDiff: buildAssignmentDiff(baselineState, orchestration)
+      .sort(compareAssignmentDiffItems),
   };
 }
 
@@ -160,4 +176,75 @@ function compareNeedReportItems(
   right: { readonly needId: string },
 ): number {
   return left.needId.localeCompare(right.needId);
+}
+
+function buildAssignmentDiff(
+  baselineState: CopiedBaselineState,
+  orchestration: RepairOrchestrationResult,
+): RepairAssignmentDiffItem[] {
+  const baselineByDemandUnitId = new Map(
+    baselineState.copiedAssignments.map(assignment => [assignment.demandUnitId, assignment] as const),
+  );
+
+  const finalAssignments = orchestration.solverResult.feasible
+    ? orchestration.solverResult.assignments
+    : [];
+  const finalByDemandUnitId = new Map(
+    finalAssignments.map(assignment => [assignment.demandUnitId, assignment] as const),
+  );
+
+  const diff: RepairAssignmentDiffItem[] = [];
+
+  for (const baselineAssignment of baselineState.copiedAssignments) {
+    const finalAssignment = finalByDemandUnitId.get(baselineAssignment.demandUnitId);
+    if (!finalAssignment) {
+      diff.push({
+        demandUnitId: baselineAssignment.demandUnitId,
+        baselineAssignmentId: baselineAssignment.id,
+        baselineAgentId: baselineAssignment.agentId,
+        status: 'released',
+      });
+      continue;
+    }
+
+    if (finalAssignment.agentId === baselineAssignment.agentId) {
+      diff.push({
+        demandUnitId: baselineAssignment.demandUnitId,
+        baselineAssignmentId: baselineAssignment.id,
+        baselineAgentId: baselineAssignment.agentId,
+        finalAgentId: finalAssignment.agentId,
+        status: 'preserved-exactly',
+      });
+      continue;
+    }
+
+    diff.push({
+      demandUnitId: baselineAssignment.demandUnitId,
+      baselineAssignmentId: baselineAssignment.id,
+      baselineAgentId: baselineAssignment.agentId,
+      finalAgentId: finalAssignment.agentId,
+      status: 'changed-assignee',
+    });
+  }
+
+  for (const finalAssignment of finalAssignments) {
+    if (baselineByDemandUnitId.has(finalAssignment.demandUnitId)) {
+      continue;
+    }
+
+    diff.push({
+      demandUnitId: finalAssignment.demandUnitId,
+      finalAgentId: finalAssignment.agentId,
+      status: 'newly-assigned',
+    });
+  }
+
+  return diff;
+}
+
+function compareAssignmentDiffItems(
+  left: { readonly demandUnitId: string },
+  right: { readonly demandUnitId: string },
+): number {
+  return left.demandUnitId.localeCompare(right.demandUnitId);
 }

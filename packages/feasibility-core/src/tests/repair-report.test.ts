@@ -67,5 +67,21 @@ describe('stable repair report', () => {
     assert.strictEqual(report.degradedAssignments.length, 1);
     assert.strictEqual(report.releasedAssignments.length, 0);
     assert.deepStrictEqual(report.needs, []);
+    assert.deepStrictEqual(report.assignmentDiff, [
+      {
+        demandUnitId: 'n1#0',
+        baselineAssignmentId: 'ba-1',
+        baselineAgentId: 'c1',
+        finalAgentId: 'c1',
+        status: 'preserved-exactly',
+      },
+      {
+        demandUnitId: 'n2#0',
+        baselineAssignmentId: 'ba-2',
+        baselineAgentId: 'c1',
+        finalAgentId: 'c2',
+        status: 'changed-assignee',
+      },
+    ]);
   });
 });

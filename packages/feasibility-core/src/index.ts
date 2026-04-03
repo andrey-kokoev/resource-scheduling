@@ -89,6 +89,7 @@ export type {
   RepairResult,
   StableRepairReport,
   RepairAssignmentReportItem,
+  RepairAssignmentDiffItem,
   RepairNeedReportItem,
   ShiftPatternRule,
   MinimumRestRule,

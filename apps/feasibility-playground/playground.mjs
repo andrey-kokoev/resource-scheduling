@@ -122,6 +122,43 @@ function renderRepairAssignments(assignments) {
   `;
 }
 
+function renderRepairAssignmentDiff(report) {
+  if (!report.assignmentDiff || report.assignmentDiff.length === 0) {
+    return `
+      <section class="need-card">
+        <h3>Baseline vs final assignments</h3>
+        <p class="hint">No assignment-level diff is available.</p>
+      </section>
+    `;
+  }
+
+  const rows = report.assignmentDiff.map(item => `
+    <tr>
+      <td>${escapeHtml(item.demandUnitId)}</td>
+      <td>${escapeHtml(item.baselineAgentId ?? 'n/a')}</td>
+      <td>${escapeHtml(item.finalAgentId ?? 'n/a')}</td>
+      <td>${escapeHtml(item.status)}</td>
+    </tr>
+  `).join('');
+
+  return `
+    <section class="need-card">
+      <h3>Baseline vs final assignments</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Demand unit</th>
+            <th>Baseline agent</th>
+            <th>Final agent</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </section>
+  `;
+}
+
 function renderRepairReport(report, repairResult, assignments) {
   const attemptItems = repairResult.attempts.map(attempt => `
     <li>
@@ -192,6 +229,7 @@ function renderRepairReport(report, repairResult, assignments) {
         <h3>Remaining needs</h3>
         ${needList}
       </section>
+      ${renderRepairAssignmentDiff(report)}
       ${renderRepairAssignments(assignments)}
     </div>
   `;
