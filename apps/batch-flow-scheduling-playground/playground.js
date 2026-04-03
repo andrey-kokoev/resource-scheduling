@@ -2,6 +2,7 @@ import {
   buildSampleBatchFlowSolution,
   compileSampleBatchFlow,
   createSampleBatchFlowModel,
+  listBatchFlowSamples,
 } from '../../packages/batch-flow-scheduling/dist/index.js';
 
 function formatMs(ms) {
@@ -18,22 +19,29 @@ function renderTable(headers, rows) {
 
 function render() {
   const app = document.getElementById('app');
-  const model = createSampleBatchFlowModel();
-  const compiled = compileSampleBatchFlow();
+  const samples = listBatchFlowSamples();
+  const currentSampleId = new URLSearchParams(window.location.search).get('sample') ?? samples[0].id;
+  const currentSample = samples.find(sample => sample.id === currentSampleId) ?? samples[0];
+  const model = createSampleBatchFlowModel(currentSample.id);
+  const compiled = compileSampleBatchFlow(currentSample.id);
 
   if (!compiled.ok) {
     app.innerHTML = `
       <section class="hero-card">
         <p class="eyebrow">Batch Flow Scheduling Playground</p>
         <h1>Sample compilation failed</h1>
+        <p style="margin:0 0 0.75rem;">Scenario: <strong>${currentSample.label}</strong></p>
         <p>The package-level sample should compile. It currently reports: <code>${compiled.errors.map(error => error.type).join(', ')}</code></p>
       </section>
     `;
     return;
   }
 
-  const solution = buildSampleBatchFlowSolution();
+  const solution = buildSampleBatchFlowSolution(currentSample.id);
   const { concreteBatchSteps, solverGraph, constraintModel } = compiled.compiled;
+  const sampleOptions = samples
+    .map(sample => `<option value="${sample.id}" ${sample.id === currentSample.id ? 'selected' : ''}>${sample.label}</option>`)
+    .join('');
 
   app.innerHTML = `
     <section class="hero">
@@ -44,6 +52,11 @@ function render() {
           This is the first thin public surface for the batch-flow track. It shows one concrete sample,
           the compiled solver-neutral graph, and the stable solution shape that future solver backends should target.
         </p>
+        <div class="sample-picker">
+          <label for="sample-select">Scenario</label>
+          <select id="sample-select">${sampleOptions}</select>
+        </div>
+        <p class="sample-description">${currentSample.description}</p>
       </section>
       <aside class="hero-card status-card">
         <h2>Current state</h2>
@@ -156,6 +169,14 @@ function render() {
       </section>
     </section>
   `;
+
+  const select = document.getElementById('sample-select');
+  select.addEventListener('change', event => {
+    const nextSampleId = event.target.value;
+    const url = new URL(window.location.href);
+    url.searchParams.set('sample', nextSampleId);
+    window.location.href = url.toString();
+  });
 }
 
 render();

@@ -2,9 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  composeBatchFlowSampleModel,
   buildSampleBatchFlowSolution,
   compileSampleBatchFlow,
+  createBaseBatchFlowModel,
   createSampleBatchFlowModel,
+  listBatchFlowSamples,
+  addSecondMixerAndSecondBatch,
+  tightenFillMaxLag,
 } from './sample.js';
 import { buildBatchFlowSolution } from './solution.js';
 import { compileBatchFlowDomain } from './compiler.js';
@@ -472,4 +477,25 @@ test('sample flow compiles and yields a stable solution shape', () => {
       },
     ],
   );
+});
+
+test('batch-flow samples are composed from base plus pure transforms', () => {
+  const multiBatch = composeBatchFlowSampleModel(addSecondMixerAndSecondBatch);
+  const tightLag = composeBatchFlowSampleModel(tightenFillMaxLag);
+
+  assert.equal(multiBatch.batches.length, 2);
+  assert.equal(multiBatch.processorInstances.length, 3);
+  assert.equal(tightLag.batchTypes[0].route[0].maxLagMs, 5_000);
+  assert.equal(createBaseBatchFlowModel().batches.length, 1);
+});
+
+test('batch-flow sample catalog exposes multiple named scenarios', () => {
+  const samples = listBatchFlowSamples();
+
+  assert.deepEqual(
+    samples.map(sample => sample.id),
+    ['base', 'multi-batch', 'tight-max-lag'],
+  );
+  assert.ok(compileSampleBatchFlow('multi-batch').ok);
+  assert.ok(compileSampleBatchFlow('tight-max-lag').ok);
 });
