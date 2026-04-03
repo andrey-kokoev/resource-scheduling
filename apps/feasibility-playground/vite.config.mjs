@@ -1,32 +1,32 @@
 import { defineConfig } from 'vite';
-import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const root = fileURLToPath(new URL('.', import.meta.url));
+const appDir = fileURLToPath(new URL('.', import.meta.url));
+const repoRoot = fileURLToPath(new URL('../..', import.meta.url));
+
+const pages = {
+  index: fileURLToPath(new URL('./index.html', import.meta.url)),
+  boundary: fileURLToPath(new URL('./boundary.html', import.meta.url)),
+  docs: fileURLToPath(new URL('./docs.html', import.meta.url)),
+  categoryTheoreticBoundary: fileURLToPath(new URL('./category-theoretic-boundary.html', import.meta.url)),
+  packageOverview: fileURLToPath(new URL('./package-overview.html', import.meta.url)),
+  examplesOverview: fileURLToPath(new URL('./examples-overview.html', import.meta.url)),
+  featureMatrix: fileURLToPath(new URL('./feature-matrix.html', import.meta.url)),
+};
 
 export default defineConfig({
-  root,
+  root: appDir,
+  appType: 'mpa',
   server: {
-    host: '127.0.0.1',
-    port: 4173,
-    strictPort: true,
-  },
-  preview: {
-    host: '127.0.0.1',
-    port: 4173,
-    strictPort: true,
+    fs: {
+      allow: [appDir, repoRoot],
+    },
   },
   build: {
-      rollupOptions: {
-        input: {
-          index: path.resolve(root, 'index.html'),
-          docs: path.resolve(root, 'docs.html'),
-          boundary: path.resolve(root, 'boundary.html'),
-          categoryTheoreticBoundary: path.resolve(root, 'category-theoretic-boundary.html'),
-          packageOverview: path.resolve(root, 'package-overview.html'),
-          examplesOverview: path.resolve(root, 'examples-overview.html'),
-        featureMatrix: path.resolve(root, 'feature-matrix.html'),
-      },
+    outDir: 'dist',
+    emptyOutDir: true,
+    rollupOptions: {
+      input: pages,
     },
   },
 });

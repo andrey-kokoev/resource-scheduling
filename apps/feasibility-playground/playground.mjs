@@ -1,4 +1,3 @@
-import { evaluateScenario } from './evaluator.mjs';
 import {
   getSampleScenario,
   hydrateScenario,
@@ -6,6 +5,7 @@ import {
   sampleScenarios,
   summarizeScenario,
 } from './scenario.mjs';
+import { evaluateScenario } from './evaluator.mjs';
 
 const editor = document.getElementById('scenario-json');
 const resultPanel = document.getElementById('result');

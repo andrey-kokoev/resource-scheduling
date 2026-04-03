@@ -1,4 +1,4 @@
-const corePromise = import(new URL('../../packages/feasibility-core/dist/index.js', import.meta.url));
+import * as core from './core-dist/index.js';
 
 function enrichAssignments(input, context, assignments) {
   return assignments.map(assignment => {
@@ -23,7 +23,6 @@ function enrichAssignments(input, context, assignments) {
 }
 
 export async function evaluateScenario(input) {
-  const core = await corePromise;
   const solveInput = core.compileDomain(input);
   const result = core.solve(solveInput);
   const context = core.buildRegroupingContext(input);
@@ -48,4 +47,3 @@ export async function evaluateScenario(input) {
     },
   };
 }
-

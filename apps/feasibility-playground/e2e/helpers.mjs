@@ -3,6 +3,8 @@ import { expect } from '@playwright/test';
 export async function openPlayground(page) {
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Feasibility Playground' })).toBeVisible();
+  await expect(page.getByLabel('Sample scenario').locator('option')).toHaveCount(10);
+  await expect(page.locator('#status')).toContainText(/^(Feasible|Infeasible):/);
 }
 
 export async function loadSample(page, sampleLabel) {

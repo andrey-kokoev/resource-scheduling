@@ -5,3 +5,5 @@ build
 .DS_Store
 test-results
 package-lock.json
+apps/feasibility-playground/shared-sample-scenarios.js
+apps/feasibility-playground/.wrangler/

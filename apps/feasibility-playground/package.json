@@ -3,16 +3,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter feasibility-core build && vite build && node validate.mjs",
+    "build": "pnpm --filter feasibility-core build && vite build && XDG_CONFIG_HOME=/tmp/codex-wrangler XDG_CACHE_HOME=/tmp/codex-wrangler-cache wrangler deploy --dry-run && node validate.mjs",
     "test:e2e": "playwright test --config playwright.config.mjs",
-    "typecheck": "node --check evaluator.mjs && node --check playground.mjs && node --check scenario.mjs && node --check validate.mjs && node --check playwright.config.mjs && node --check vite.config.mjs && node --check e2e/helpers.mjs && node --check e2e/playground.spec.mjs",
-    "dev": "bash -lc 'fuser -k 4173/tcp 2>/dev/null || true; pnpm --filter feasibility-core build && vite'",
+    "typecheck": "node --check worker.mjs && node --check evaluator.mjs && node --check playground.mjs && node --check scenario.mjs && node --check validate.mjs && node --check playwright.config.mjs && node --check e2e/helpers.mjs && node --check e2e/playground.spec.mjs",
+    "dev": "vite",
     "test": "pnpm --filter feasibility-core build && node validate.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
-    "hono": "^4.12.10",
-    "vite": "^8.0.3",
+    "vite": "^8.0.0",
     "wrangler": "^4.80.0"
   }
 }

@@ -1,0 +1,7 @@
+name = "feasibility-playground"
+main = "worker.mjs"
+compatibility_date = "2026-04-03"
+
+[assets]
+directory = "."
+binding = "ASSETS"

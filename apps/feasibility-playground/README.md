@@ -1,7 +1,7 @@
 # Feasibility Playground
 
 Thin browser evaluator for `feasibility-core`.
-It now runs on Vite 8 for local development and build output.
+Primary local development uses Vite 8. The Cloudflare Worker boundary stays available as a supplementary deploy/check path.
 
 If you want the boundary explanation first, open the [Input / Output Boundary Guide](./boundary.html).
 If you want the abstract companion view, open the [Category-Theoretic Boundary](./category-theoretic-boundary.html).
@@ -25,9 +25,9 @@ If you want the comparison matrix, open the [Feature Matrix](./feature-matrix.ht
 pnpm --filter feasibility-playground dev
 ```
 
-2. Open the URL printed by Vite, usually `http://localhost:4173`.
+2. Open the URL printed by Vite, usually `http://127.0.0.1:5173`.
 
-3. Run the browser E2E suite against the local server:
+3. Run the browser E2E suite against the local Vite surface:
 
 ```bash
 pnpm --filter feasibility-playground test:e2e
@@ -77,7 +77,9 @@ The Playwright suite exercises the sample scenarios end to end:
 - site-scoped coverage
 - line-aware coverage context
 
-It runs against the local dev server, not a deployed target.
+It runs against the local Vite dev target.
+
+Worker deploy checks still run in the package build.
 
 ## Notes
 
