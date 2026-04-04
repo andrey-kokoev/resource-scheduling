@@ -5,6 +5,10 @@
   "scripts": {
     "build": "pnpm -r --if-present build",
     "dev": "pnpm -r --parallel --if-present dev",
+    "ship": "pnpm --filter resource-scheduling-site ship",
+    "ship:site": "pnpm --filter resource-scheduling-site ship",
+    "ship:staffing-scheduling": "pnpm --filter staffing-scheduling-playground ship",
+    "ship:batch-flow-scheduling": "pnpm --filter batch-flow-scheduling-playground ship",
     "lint": "pnpm -r --if-present lint",
     "test": "pnpm -r --if-present test"
   }

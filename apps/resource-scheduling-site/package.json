@@ -1,0 +1,10 @@
+{
+  "name": "resource-scheduling-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "pnpm --filter staffing-scheduling-playground build && pnpm --filter batch-flow-scheduling-playground build && node sync-site.mjs && XDG_CONFIG_HOME=/tmp/codex-wrangler XDG_CACHE_HOME=/tmp/codex-wrangler-cache ../staffing-scheduling-playground/node_modules/.bin/wrangler deploy --dry-run",
+    "ship": "pnpm run build && XDG_CONFIG_HOME=/tmp/codex-wrangler XDG_CACHE_HOME=/tmp/codex-wrangler-cache ../staffing-scheduling-playground/node_modules/.bin/wrangler deploy",
+    "deploy": "pnpm run ship"
+  }
+}

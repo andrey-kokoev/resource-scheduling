@@ -3,7 +3,8 @@ import path from 'node:path';
 
 const appDir = path.resolve(import.meta.dirname);
 const sourceDir = path.resolve(appDir, '../../packages/batch-flow-scheduling/dist-docs');
-const targetDir = path.resolve(appDir, 'generated-docs');
+const targetArg = process.argv[2] ?? 'generated-docs';
+const targetDir = path.resolve(appDir, targetArg);
 
 async function removeDirIfPresent(dir) {
   await fs.rm(dir, { recursive: true, force: true });
@@ -25,4 +26,4 @@ async function copyDir(source, target) {
 
 await removeDirIfPresent(targetDir);
 await copyDir(sourceDir, targetDir);
-console.log('Synced batch-flow generated docs.');
+console.log(`Synced batch-flow generated docs to ${targetArg}.`);

@@ -1,4 +1,4 @@
-name = "staffing-scheduling"
+name = "resource-scheduling"
 main = "worker.mjs"
 compatibility_date = "2026-04-03"
 

@@ -15,9 +15,11 @@ Run:
 ```bash
 pnpm --filter batch-flow-scheduling-playground build
 pnpm --filter batch-flow-scheduling-playground dev
+pnpm --filter batch-flow-scheduling-playground ship
 ```
 
 Notes:
 
 - package markdown docs remain the source of truth under `packages/batch-flow-scheduling/docs`
 - this app syncs the generated HTML into `generated-docs/` during build/dev
+- `ship` deploys the built app to Cloudflare Workers via Wrangler

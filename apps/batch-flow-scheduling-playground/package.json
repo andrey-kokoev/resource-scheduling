@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter batch-flow-scheduling build && node sync-docs.mjs && ../staffing-scheduling-playground/node_modules/.bin/vite build",
-    "dev": "pnpm --filter batch-flow-scheduling build && node sync-docs.mjs && ../staffing-scheduling-playground/node_modules/.bin/vite"
+    "build": "pnpm --filter batch-flow-scheduling build && node sync-docs.mjs generated-docs && ../staffing-scheduling-playground/node_modules/.bin/vite build && node sync-docs.mjs dist/generated-docs",
+    "dev": "pnpm --filter batch-flow-scheduling build && node sync-docs.mjs generated-docs && ../staffing-scheduling-playground/node_modules/.bin/vite",
+    "ship": "pnpm run build && XDG_CONFIG_HOME=/tmp/codex-wrangler XDG_CACHE_HOME=/tmp/codex-wrangler-cache ../staffing-scheduling-playground/node_modules/.bin/wrangler deploy",
+    "deploy": "pnpm run ship"
   }
 }
