@@ -11,6 +11,10 @@ import {
   addSecondMixerAndSecondBatch,
   addSecondJuiceBatchSharingFiller,
   addSecondLineAndFiller,
+  addChangeoverPressureOnSingleMixer,
+  addInterleavingPlantScenario,
+  addExpandedMultiProductPlant,
+  breakProcessorAssignment,
   tightenFillMaxLag,
 } from './sample.js';
 import { buildBatchFlowSolution } from './solution.js';
@@ -486,6 +490,10 @@ test('batch-flow samples are composed from base plus pure transforms', () => {
   const tightLag = composeBatchFlowSampleModel(tightenFillMaxLag);
   const sharedFiller = composeBatchFlowSampleModel(addSecondJuiceBatchSharingFiller);
   const secondLine = composeBatchFlowSampleModel(addSecondLineAndFiller);
+  const changeoverPressure = composeBatchFlowSampleModel(addChangeoverPressureOnSingleMixer);
+  const interleavingPlant = composeBatchFlowSampleModel(addInterleavingPlantScenario);
+  const expandedPlant = composeBatchFlowSampleModel(addExpandedMultiProductPlant);
+  const invalidAssignment = composeBatchFlowSampleModel(breakProcessorAssignment);
 
   assert.equal(multiBatch.batches.length, 2);
   assert.equal(multiBatch.processorInstances.length, 3);
@@ -494,6 +502,18 @@ test('batch-flow samples are composed from base plus pure transforms', () => {
   assert.equal(sharedFiller.schedule?.scheduledSteps.length, 4);
   assert.equal(secondLine.processorInstances.length, 3);
   assert.equal(secondLine.batchTypes.length, 2);
+  assert.equal(changeoverPressure.batchTypes.length, 2);
+  assert.equal(changeoverPressure.batches.length, 2);
+  assert.ok(changeoverPressure.changeoverRules?.some(rule => rule.id === 'co-juice-to-syrup'));
+  assert.equal(interleavingPlant.processorTypes.length, 4);
+  assert.equal(interleavingPlant.batchTypes.length, 3);
+  assert.equal(interleavingPlant.batches.length, 3);
+  assert.ok(interleavingPlant.schedule?.scheduledSteps.length === 8);
+  assert.equal(expandedPlant.processorTypes.length, 5);
+  assert.equal(expandedPlant.batchTypes.length, 4);
+  assert.equal(expandedPlant.batches.length, 4);
+  assert.ok(expandedPlant.schedule?.scheduledSteps.length === 10);
+  assert.equal(invalidAssignment.schedule?.scheduledSteps[0].processorInstanceId, 'fl-1');
   assert.equal(createBaseBatchFlowModel().batches.length, 1);
 });
 
@@ -502,10 +522,82 @@ test('batch-flow sample catalog exposes multiple named scenarios', () => {
 
   assert.deepEqual(
     samples.map(sample => sample.id),
-    ['base', 'multi-batch', 'tight-max-lag', 'shared-filler', 'second-line'],
+    ['base', 'multi-batch', 'tight-max-lag', 'shared-filler', 'second-line', 'changeover-pressure', 'interleaving-plant', 'expanded-multiproduct-plant', 'invalid-machine-assignment'],
   );
-  assert.ok(compileSampleBatchFlow('multi-batch').ok);
-  assert.ok(compileSampleBatchFlow('tight-max-lag').ok);
-  assert.ok(compileSampleBatchFlow('shared-filler').ok);
-  assert.ok(compileSampleBatchFlow('second-line').ok);
+  for (const sample of samples) {
+    const compiled = compileSampleBatchFlow(sample.id);
+    assert.equal(compiled.ok, sample.expectedCompileOk, sample.id);
+  }
+});
+
+test('changeover-pressure sample exposes asymmetric mixer transition costs', () => {
+  const compiled = compileSampleBatchFlow('changeover-pressure');
+
+  assert.equal(compiled.ok, true);
+  if (!compiled.ok) return;
+
+  const costs = compiled.compiled.solverGraph.machineTransitionCosts.filter(
+    cost => cost.machineId === 'mx-1',
+  );
+
+  assert.ok(
+    costs.some(
+      cost =>
+        cost.fromNodeId === 'cbs:batch-1:mix' &&
+        cost.toNodeId === 'cbs:batch-4:cook' &&
+        cost.minGapMs === 12_000,
+    ),
+  );
+  assert.ok(
+    costs.some(
+      cost =>
+        cost.fromNodeId === 'cbs:batch-4:cook' &&
+        cost.toNodeId === 'cbs:batch-1:mix' &&
+        cost.minGapMs === 8_000,
+    ),
+  );
+  assert.ok(
+    compiled.compiled.solverGraph.machineNoOverlapPairs.some(
+      pair =>
+        pair.machineId === 'mx-1' &&
+        pair.leftNodeId === 'cbs:batch-1:mix' &&
+        pair.rightNodeId === 'cbs:batch-4:cook',
+    ),
+  );
+});
+
+test('interleaving-plant sample expands to a materially larger compiled graph', () => {
+  const compiled = compileSampleBatchFlow('interleaving-plant');
+
+  assert.equal(compiled.ok, true);
+  if (!compiled.ok) return;
+
+  assert.equal(compiled.compiled.concreteBatchSteps.length, 8);
+  assert.equal(compiled.compiled.solverGraph.nodes.length, 8);
+  assert.ok(compiled.compiled.solverGraph.batchTemporalEdges.length >= 5);
+  assert.ok(compiled.compiled.solverGraph.machineNoOverlapPairs.length > 0);
+  assert.ok(compiled.compiled.solverGraph.machineTransitionCosts.length > 0);
+});
+
+test('expanded-multiproduct-plant sample expands to a larger multi-family compiled graph', () => {
+  const compiled = compileSampleBatchFlow('expanded-multiproduct-plant');
+
+  assert.equal(compiled.ok, true);
+  if (!compiled.ok) return;
+
+  assert.equal(compiled.compiled.concreteBatchSteps.length, 10);
+  assert.equal(compiled.compiled.solverGraph.nodes.length, 10);
+  assert.ok(compiled.compiled.solverGraph.batchTemporalEdges.length >= 6);
+  assert.ok(compiled.compiled.solverGraph.machineCapacityGroups.length >= 7);
+  assert.ok(compiled.compiled.solverGraph.machineNoOverlapPairs.length > 0);
+  assert.ok(compiled.compiled.solverGraph.machineTransitionCosts.length > 0);
+});
+
+test('invalid-machine-assignment sample fails at the validation boundary', () => {
+  const compiled = compileSampleBatchFlow('invalid-machine-assignment');
+
+  assert.equal(compiled.ok, false);
+  if (compiled.ok) return;
+
+  assert.ok(compiled.errors.some(error => error.type === 'processor-type-mismatch'));
 });

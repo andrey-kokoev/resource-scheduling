@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter batch-flow-scheduling build && ../staffing-scheduling-playground/node_modules/.bin/vite build",
-    "dev": "../staffing-scheduling-playground/node_modules/.bin/vite"
+    "build": "pnpm --filter batch-flow-scheduling build && node sync-docs.mjs && ../staffing-scheduling-playground/node_modules/.bin/vite build",
+    "dev": "pnpm --filter batch-flow-scheduling build && node sync-docs.mjs && ../staffing-scheduling-playground/node_modules/.bin/vite"
   }
 }
