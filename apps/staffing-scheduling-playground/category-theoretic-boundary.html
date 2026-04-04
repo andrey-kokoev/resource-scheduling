@@ -25,6 +25,38 @@
           linear-gradient(180deg, #fbf7f4 0%, var(--bg) 100%);
         color: var(--ink);
       }
+      .sitebar {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 1.2rem 1.5rem 0;
+      }
+      .sitebar-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.9rem 1.05rem;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: rgba(255, 250, 246, 0.86);
+        box-shadow: 0 10px 28px rgba(58, 35, 17, 0.06);
+      }
+      .sitebar-brand {
+        color: var(--accent);
+        font-size: 0.9rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-decoration: none;
+      }
+      .sitebar-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+      }
+      .sitebar-nav a {
+        color: var(--muted);
+        text-decoration: none;
+      }
       header, main {
         max-width: 1180px;
         margin: 0 auto;
@@ -190,6 +222,17 @@
     </style>
   </head>
   <body>
+    <div class="sitebar">
+      <div class="sitebar-inner">
+        <a class="sitebar-brand" href="../">Resource Scheduling</a>
+        <nav class="sitebar-nav" aria-label="Site navigation">
+          <a href="./index.html">Staffing</a>
+          <a href="./docs.html">Staffing docs</a>
+          <a href="../batch-flow/">Batch-flow</a>
+          <a href="../batch-flow/docs">Batch-flow docs</a>
+        </nav>
+      </div>
+    </div>
     <header>
       <p class="breadcrumb"><a href="./index.html">Playground</a> / <a href="./docs.html">Docs</a> / <strong>Abstract boundary view</strong></p>
       <h1>Staffing Scheduling Boundary, Abstract View</h1>

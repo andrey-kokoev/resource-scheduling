@@ -32,12 +32,33 @@ function renderFailurePanel(currentSample, compiled) {
   return `
     <section class="hero">
       <section class="hero-card">
+        <p class="breadcrumb"><strong>Playground</strong></p>
         <p class="eyebrow">Batch Flow Scheduling Playground</p>
-        <h1>Sample validation failed</h1>
-        <p>
-          This scenario is intentionally outside the current valid domain boundary. It is useful because it shows
-          the package failing at validation time rather than pretending the model can compile.
+        <h1>Batch-Flow Scheduling Playground</h1>
+        <p class="lede">
+          A thin evaluator for <code>batch-flow-scheduling</code>. It shows the sample model, the compiled
+          solver-neutral graph, and the stable solution shape that future solver backends should target.
         </p>
+        <p class="lede" style="margin-top: 0.75rem;">
+          This selected sample is intentionally invalid, so the page is showing the validation boundary instead of a compiled graph.
+        </p>
+        <div class="nav-stack">
+          <div class="nav-group">
+            <div class="nav-label">Start here</div>
+            <div class="nav">
+              <a class="button current" href="./index.html" aria-current="page">Playground evaluator</a>
+              <a class="button primary" href="./generated-docs/index.html">Docs hub</a>
+            </div>
+          </div>
+          <div class="nav-group">
+            <div class="nav-label">Guides</div>
+            <div class="nav">
+              <a class="button" href="./generated-docs/001-what-this-is.html">What this is</a>
+              <a class="button" href="./generated-docs/002-invariants.html">Invariants</a>
+              <a class="button" href="./generated-docs/003-solver-graph.html">Solver graph</a>
+            </div>
+          </div>
+        </div>
         <div class="docs-panel">
           <h2>Scenario</h2>
           <ul class="docs-list">
@@ -227,20 +248,32 @@ function render() {
   app.innerHTML = `
     <section class="hero">
       <section class="hero-card">
+        <p class="breadcrumb"><strong>Playground</strong></p>
         <p class="eyebrow">Batch Flow Scheduling Playground</p>
-        <h1>Sample Batch Flow Model</h1>
-        <p>
-          This is the first thin public surface for the batch-flow track. It shows one concrete sample,
-          the compiled solver-neutral graph, and the stable solution shape that future solver backends should target.
+        <h1>Batch-Flow Scheduling Playground</h1>
+        <p class="lede">
+          A thin evaluator for <code>batch-flow-scheduling</code>. Load a sample plant-like model,
+          inspect the compiled solver-neutral graph, and review the stable solution target.
         </p>
-        <div class="docs-panel">
-          <h2>Docs</h2>
-          <ul class="docs-list">
-            <li><a href="./generated-docs/index.html">Docs hub</a></li>
-            <li><a href="./generated-docs/001-what-this-is.html">What this is</a></li>
-            <li><a href="./generated-docs/002-invariants.html">Invariants</a></li>
-            <li><a href="./generated-docs/003-solver-graph.html">Solver graph</a></li>
-          </ul>
+        <p class="lede" style="margin-top: 0.75rem;">
+          The docs hub is the fastest way to orient before opening the invariants or solver-graph docs.
+        </p>
+        <div class="nav-stack">
+          <div class="nav-group">
+            <div class="nav-label">Start here</div>
+            <div class="nav">
+              <a class="button current" href="./index.html" aria-current="page">Playground evaluator</a>
+              <a class="button primary" href="./generated-docs/index.html">Docs hub</a>
+            </div>
+          </div>
+          <div class="nav-group">
+            <div class="nav-label">Guides</div>
+            <div class="nav">
+              <a class="button" href="./generated-docs/001-what-this-is.html">What this is</a>
+              <a class="button" href="./generated-docs/002-invariants.html">Invariants</a>
+              <a class="button" href="./generated-docs/003-solver-graph.html">Solver graph</a>
+            </div>
+          </div>
         </div>
         <div class="sample-picker">
           <label for="sample-select">Scenario</label>
