@@ -16,6 +16,7 @@ const pages = {
 
 export default defineConfig({
   root: appDir,
+  base: './',
   appType: 'mpa',
   server: {
     fs: {

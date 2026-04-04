@@ -9,15 +9,13 @@
         color-scheme: light;
         --bg-top: #f6e9d7;
         --bg-bottom: #eee2d3;
-        --panel: rgba(255, 250, 243, 0.94);
-        --panel-strong: #f4e8d9;
+        --panel: rgba(255, 250, 243, 0.95);
         --ink: #1f1812;
         --muted: #65574c;
         --border: #d8c7b6;
         --accent: #8b4820;
         --accent-strong: #2a1d14;
         --accent-soft: #ead7c3;
-        --line: rgba(139, 72, 32, 0.14);
       }
 
       * {
@@ -34,58 +32,26 @@
       }
 
       main {
-        max-width: 1160px;
+        max-width: 1040px;
         margin: 0 auto;
-        padding: 1.25rem 1.25rem 3rem;
-      }
-
-      .topbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 1rem;
-        padding: 0.9rem 1.1rem;
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        background: rgba(255, 250, 243, 0.82);
-        box-shadow: 0 10px 28px rgba(58, 35, 17, 0.06);
+        padding: 2.2rem 1.25rem 3rem;
       }
 
       .brand {
+        margin: 0 0 1rem;
+        color: var(--accent);
         font-size: 0.92rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--accent);
-      }
-
-      .toplinks {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.6rem;
-      }
-
-      .toplinks a,
-      .mini-link {
-        color: var(--muted);
-        text-decoration: none;
-      }
-
-      .hero,
-      .card,
-      .track {
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 24px;
-        box-shadow: 0 16px 42px rgba(75, 47, 24, 0.08);
       }
 
       .hero {
-        display: grid;
-        grid-template-columns: 1.3fr 0.7fr;
-        gap: 1rem;
+        margin-bottom: 1.25rem;
         padding: 1.5rem;
-        margin-bottom: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        background: var(--panel);
+        box-shadow: 0 16px 42px rgba(75, 47, 24, 0.08);
       }
 
       .eyebrow {
@@ -98,18 +64,8 @@
 
       h1 {
         margin: 0 0 0.65rem;
-        font-size: clamp(2.4rem, 6vw, 4.8rem);
+        font-size: clamp(2.5rem, 6vw, 4.8rem);
         line-height: 0.92;
-      }
-
-      h2 {
-        margin: 0 0 0.5rem;
-        font-size: 1.35rem;
-      }
-
-      h3 {
-        margin: 0 0 0.3rem;
-        font-size: 1rem;
       }
 
       p {
@@ -118,79 +74,36 @@
         line-height: 1.65;
       }
 
-      .hero-copy {
+      .selector {
         display: grid;
         gap: 1rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .hero-actions,
-      .links,
-      .micro-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-      }
-
-      a.cta,
-      a.cta-secondary {
-        display: inline-block;
-        padding: 0.78rem 1.05rem;
-        border-radius: 999px;
-        text-decoration: none;
-      }
-
-      a.cta {
-        background: var(--accent-strong);
-        color: #fff9f3;
-      }
-
-      a.cta-secondary {
-        background: var(--accent-soft);
-        color: var(--accent);
-      }
-
-      .hero-side {
-        display: grid;
-        gap: 0.85rem;
-      }
-
-      .metric {
-        padding: 1rem;
-        border-radius: 18px;
-        background: var(--panel-strong);
-        border: 1px solid var(--line);
-      }
-
-      .metric strong {
+      .card {
         display: block;
-        font-size: 1.6rem;
-        color: var(--accent-strong);
+        padding: 1.35rem;
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        background: var(--panel);
+        box-shadow: 0 16px 42px rgba(75, 47, 24, 0.08);
+        text-decoration: none;
+        color: inherit;
+        transition:
+          transform 160ms ease,
+          box-shadow 160ms ease,
+          border-color 160ms ease;
       }
 
-      .section {
-        margin-top: 1rem;
+      .card:hover {
+        transform: translateY(-2px);
+        border-color: #b98a6f;
+        box-shadow: 0 18px 46px rgba(75, 47, 24, 0.12);
       }
 
-      .comparison {
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      }
-
-      .track {
-        padding: 1.3rem;
-      }
-
-      .track-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 0.75rem;
-        margin-bottom: 0.9rem;
-      }
-
-      .pill {
+      .tag {
         display: inline-block;
+        margin-bottom: 0.8rem;
         padding: 0.22rem 0.55rem;
         border-radius: 999px;
         background: var(--accent-soft);
@@ -199,25 +112,13 @@
         white-space: nowrap;
       }
 
-      .path-box {
-        margin: 0.9rem 0 1rem;
-        padding: 0.9rem 1rem;
-        border-radius: 18px;
-        background: #fbf3e8;
-        border: 1px dashed var(--border);
-      }
-
-      code.path {
-        display: inline-block;
-        padding: 0.18rem 0.45rem;
-        border-radius: 999px;
-        background: #f0e2d3;
-        color: var(--accent);
-        font-size: 0.92rem;
+      h2 {
+        margin: 0 0 0.45rem;
+        font-size: 1.45rem;
       }
 
       ul {
-        margin: 0.8rem 0 0;
+        margin: 0.9rem 0 0;
         padding-left: 1.2rem;
         color: var(--muted);
       }
@@ -226,148 +127,59 @@
         margin-top: 0.35rem;
       }
 
-      .site-notes {
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: 1fr 1fr;
+      .cta {
+        margin-top: 1rem;
+        color: var(--accent-strong);
+        font-weight: 700;
       }
 
-      .card {
-        padding: 1.2rem;
-      }
-
-      @media (max-width: 900px) {
-        .hero,
-        .site-notes {
+      @media (max-width: 860px) {
+        .selector {
           grid-template-columns: 1fr;
-        }
-
-        .topbar {
-          align-items: flex-start;
-          flex-direction: column;
         }
       }
     </style>
   </head>
   <body>
     <main>
-      <section class="topbar">
-        <div class="brand">Resource Scheduling</div>
-        <nav class="toplinks" aria-label="Top level routes">
-          <a href="./staffing/">Staffing</a>
-          <a href="./staffing/docs">Staffing docs</a>
-          <a href="./batch-flow/">Batch-flow</a>
-          <a href="./batch-flow/docs">Batch-flow docs</a>
-        </nav>
-      </section>
+      <p class="brand">Resource Scheduling</p>
 
       <section class="hero">
-        <div class="hero-copy">
-          <div>
-            <p class="eyebrow">Unified Site</p>
-            <h1>Two scheduling systems, one web surface.</h1>
-            <p>
-              Staffing scheduling and batch-flow scheduling now live under one deploy target.
-              The repo stays modular, but the public surface is a single site with clean paths,
-              shared navigation, and room for a proper top-level landing page.
-            </p>
-          </div>
-
-          <div class="hero-actions">
-            <a class="cta" href="./staffing/">Open staffing</a>
-            <a class="cta-secondary" href="./batch-flow/">Open batch-flow</a>
-          </div>
-
-          <div class="micro-links">
-            <a class="mini-link" href="./staffing/docs">Staffing docs</a>
-            <a class="mini-link" href="./batch-flow/docs">Batch-flow docs</a>
-          </div>
-        </div>
-
-        <div class="hero-side">
-          <div class="metric">
-            <strong>/staffing/</strong>
-            <p>Feasibility, repair, coverage, and explanation surfaces.</p>
-          </div>
-          <div class="metric">
-            <strong>/batch-flow/</strong>
-            <p>Batch routes, machine pressure, transition costs, and graph inspection.</p>
-          </div>
-        </div>
+        <p class="eyebrow">Choose A Surface</p>
+        <h1>Resource Scheduling</h1>
+        <p>
+          Two scheduling systems live here. Choose the one you want and go straight into it.
+        </p>
       </section>
 
-      <section class="section comparison" aria-label="Scheduling tracks">
-        <article class="track">
-          <div class="track-header">
-            <div>
-              <h2>Staffing scheduling</h2>
-              <p>Feasibility-first staffing evaluation with repair-oriented workflows.</p>
-            </div>
-            <span class="pill">People / shifts / coverage</span>
-          </div>
-
-          <div class="path-box">
-            <h3>Route</h3>
-            <code class="path">/staffing/</code>
-          </div>
-
-          <div class="links">
-            <a class="cta" href="./staffing/">Open playground</a>
-            <a class="cta-secondary" href="./staffing/docs">Open docs</a>
-          </div>
-
+      <section class="selector" aria-label="Scheduling selectors">
+        <a class="card" href="./staffing/">
+          <span class="tag">People / shifts / coverage</span>
+          <h2>Staffing scheduling</h2>
+          <p>
+            Feasibility-first staffing evaluation with repair, coverage reasoning, and domain-facing explanations.
+          </p>
           <ul>
             <li>sample plant scenarios</li>
-            <li>repair workflow and stable reports</li>
-            <li>feature matrix and boundary docs</li>
+            <li>repair workflow and reports</li>
+            <li>boundary and feature docs inside</li>
           </ul>
-        </article>
+          <div class="cta">Open staffing →</div>
+        </a>
 
-        <article class="track">
-          <div class="track-header">
-            <div>
-              <h2>Batch-flow scheduling</h2>
-              <p>Batch-flow modeling with solver-neutral graph and constraint projection.</p>
-            </div>
-            <span class="pill">Batches / machines / routes</span>
-          </div>
-
-          <div class="path-box">
-            <h3>Route</h3>
-            <code class="path">/batch-flow/</code>
-          </div>
-
-          <div class="links">
-            <a class="cta" href="./batch-flow/">Open playground</a>
-            <a class="cta-secondary" href="./batch-flow/docs">Open docs</a>
-          </div>
-
+        <a class="card" href="./batch-flow/">
+          <span class="tag">Batches / machines / routes</span>
+          <h2>Batch-flow scheduling</h2>
+          <p>
+            Batch routes, machine pressure, transition costs, and solver-neutral graph inspection.
+          </p>
           <ul>
             <li>composable scenario catalog</li>
-            <li>generated conceptual docs</li>
+            <li>generated conceptual docs inside</li>
             <li>constraint-model and solution-shape inspection</li>
           </ul>
-        </article>
-      </section>
-
-      <section class="section site-notes">
-        <article class="card">
-          <h2>Why this structure</h2>
-          <ul>
-            <li>one hostname instead of multiple workers.dev URLs</li>
-            <li>one landing page and one deploy path</li>
-            <li>shared top-level navigation without merging the domain packages</li>
-          </ul>
-        </article>
-
-        <article class="card">
-          <h2>What stays separate</h2>
-          <ul>
-            <li>package logic remains in separate package boundaries</li>
-            <li>each child app keeps its own build surface</li>
-            <li>the site app only stages and presents them together</li>
-          </ul>
-        </article>
+          <div class="cta">Open batch-flow →</div>
+        </a>
       </section>
     </main>
   </body>
