@@ -1,6 +1,7 @@
 ---
-status: PLANNED
-owner: unassigned
+status: COMPLETED
+owner: kimi
+completed_at: 2026-04-03
 ---
 
 # 20260403-058 Worker Port Shared Sample Source Reconciliation

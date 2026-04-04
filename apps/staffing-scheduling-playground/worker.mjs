@@ -1,5 +1,5 @@
 import * as core from './staffing-dist/index.js';
-import { sampleScenarios } from './staffing-dist/sample-scenarios.js';
+import { sampleScenarios } from './scenario.mjs';
 
 function parseLocalDateTime(value) {
   if (value instanceof Date) return value;

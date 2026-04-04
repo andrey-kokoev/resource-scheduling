@@ -37,7 +37,7 @@ function renderFailurePanel(currentSample, compiled) {
         <h1>Batch-Flow Scheduling Playground</h1>
         <p class="lede">
           A thin evaluator for <code>batch-flow-scheduling</code>. It shows the sample model, the compiled
-          solver-neutral graph, and the stable solution shape that future solver backends should target.
+          solver-neutral graph, and the current solution/result shape used in the package examples.
         </p>
         <p class="lede" style="margin-top: 0.75rem;">
           This selected sample is intentionally invalid, so the page is showing the validation boundary instead of a compiled graph.
@@ -94,7 +94,7 @@ function renderFailurePanel(currentSample, compiled) {
         <h2>Why this matters</h2>
         <div class="stack">
           <div class="callout">
-            <strong>Boundary honesty:</strong> this package rejects inconsistent processor assignments before any solver-neutral graph is emitted.
+            <strong>Validation boundary:</strong> this package rejects inconsistent processor assignments before any solver-neutral graph is emitted.
           </div>
           <div class="callout">
             <strong>Current case:</strong> a mix step was assigned to a filler machine, which violates processor-type compatibility.
@@ -119,8 +119,8 @@ function deriveScenarioHighlights(sampleId, compiled) {
       title: 'Why this sample matters',
       items: [
         `One mixer now carries two different products, so machine no-overlap and changeover costs act on the same pair of steps.`,
-        `The strongest projected changeover on mx-1 is ${formatMs(maxGap)}.`,
-        `This is the first sample where transition costs are not just present in the graph but structurally important.`,
+        `The largest projected changeover on mx-1 is ${formatMs(maxGap)}.`,
+        `This sample makes the transition-cost rows easier to inspect.`,
       ],
     };
   }
@@ -130,9 +130,9 @@ function deriveScenarioHighlights(sampleId, compiled) {
     return {
       title: 'Why this sample matters',
       items: [
-        `Two batches compete for the same filler, so machine no-overlap is doing real work instead of staying trivial.`,
+        `Two batches compete for the same filler, so machine no-overlap shows up on a shared machine.`,
         `Filler 1 now carries ${fillerPairs} projected no-overlap pair${fillerPairs === 1 ? '' : 's'}.`,
-        `This is the clearest bottleneck sample in the current catalog.`,
+        `This sample shows one simple shared-machine bottleneck.`,
       ],
     };
   }
@@ -143,8 +143,8 @@ function deriveScenarioHighlights(sampleId, compiled) {
       title: 'Why this sample matters',
       items: [
         `The package now has alternate machine eligibility across ${fillerGroups} filler lines.`,
-        `This widens the graph without increasing batch count pressure much.`,
-        `It is the cleanest routing-diversity example in the current catalog.`,
+        `This changes machine eligibility without changing the route structure much.`,
+        `It shows routing diversity with relatively light added pressure elsewhere.`,
       ],
     };
   }
@@ -157,7 +157,7 @@ function deriveScenarioHighlights(sampleId, compiled) {
         `The route stays the same, but the temporal window gets tighter.`,
         constrainedEdge
           ? `The most visible max-gap is ${formatMs(constrainedEdge.maxGapMs)} between consecutive steps of the same batch.`
-          : 'This makes batch-local max-gap constraints more informative than the base sample.',
+          : 'This makes batch-local max-gap constraints easier to inspect than in the base sample.',
       ],
     };
   }
@@ -168,7 +168,7 @@ function deriveScenarioHighlights(sampleId, compiled) {
       items: [
         `A second batch and second mixer widen the graph while keeping the plant shape simple.`,
         `This sample projects ${concreteBatchSteps.length} concrete steps across ${machineCount} machine groups.`,
-        `It is the cleanest first step beyond the single-batch baseline.`,
+        `It stays close to the single-batch baseline while adding more structure.`,
       ],
     };
   }
@@ -179,7 +179,7 @@ function deriveScenarioHighlights(sampleId, compiled) {
       items: [
         `Multiple processor families now interleave across the same horizon: mixers, reactors, coolers, and fillers.`,
         `The compiled graph has ${concreteBatchSteps.length} concrete steps, ${batchEdgeCount} batch-local edges, and ${noOverlapCount} machine no-overlap pairs.`,
-        `This is the first truly plant-like sample rather than a focused pressure case.`,
+        `This sample is less focused on one pressure type than the smaller cases.`,
       ],
     };
   }
@@ -188,9 +188,9 @@ function deriveScenarioHighlights(sampleId, compiled) {
     return {
       title: 'Why this sample matters',
       items: [
-        `This is the largest catalog example, with multiple product families moving through reactors, coolers, fillers, and packagers.`,
+        `This is a larger catalog example, with multiple product families moving through reactors, coolers, fillers, and packagers.`,
         `The compiled graph has ${concreteBatchSteps.length} concrete steps and ${transitionCount} projected transition costs.`,
-        `It is the best current sample for understanding the package as a plant-wide batch-flow projection surface.`,
+        `It puts several processor families into one compiled graph.`,
       ],
     };
   }
@@ -198,7 +198,7 @@ function deriveScenarioHighlights(sampleId, compiled) {
   return {
     title: 'Why this sample matters',
     items: [
-      `This is the baseline reference shape for the package: one batch, one route, one complete schedule.`,
+      `This is the base package sample: one batch, one route, one complete schedule.`,
       `It projects ${concreteBatchSteps.length} concrete steps with ${batchEdgeCount} batch-local edge${batchEdgeCount === 1 ? '' : 's'}.`,
     ],
   };
@@ -253,10 +253,10 @@ function render() {
         <h1>Batch-Flow Scheduling Playground</h1>
         <p class="lede">
           A thin evaluator for <code>batch-flow-scheduling</code>. Load a sample plant-like model,
-          inspect the compiled solver-neutral graph, and review the stable solution target.
+          inspect the compiled solver-neutral graph, and review the current solution/result shape.
         </p>
         <p class="lede" style="margin-top: 0.75rem;">
-          The docs hub is the fastest way to orient before opening the invariants or solver-graph docs.
+          The docs hub is a good place to orient before opening the invariants or solver-graph docs.
         </p>
         <div class="nav-stack">
           <div class="nav-group">
@@ -289,9 +289,9 @@ function render() {
       </section>
       <aside class="hero-card status-card">
         <h2>Current state</h2>
-        <p><span class="pill">No solver yet</span></p>
+        <p><span class="pill">Solver not included here</span></p>
         <p style="margin-top:0.75rem;">
-          What exists is the domain, compile boundary, neutral constraint model, and neutral solution target.
+          What exists here is the domain, compile boundary, neutral constraint model, and current solution/result shape.
         </p>
       </aside>
     </section>
