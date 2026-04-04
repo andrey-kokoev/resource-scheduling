@@ -27,6 +27,7 @@ async function copyDir(source, target) {
 await removeDirIfPresent(distDir);
 await fs.mkdir(distDir, { recursive: true });
 await fs.copyFile(path.resolve(siteDir, 'index.html'), path.join(distDir, 'index.html'));
+await fs.copyFile(path.resolve(siteDir, 'shared.css'), path.join(distDir, 'shared.css'));
 await copyDir(staffingDist, path.join(distDir, 'staffing'));
 await copyDir(batchFlowDist, path.join(distDir, 'batch-flow'));
 

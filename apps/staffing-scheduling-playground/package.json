@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm --filter staffing-scheduling build && vite build && node validate.mjs",
+    "build": "pnpm --filter staffing-scheduling build && vite build && cp ../resource-scheduling-site/shared.css dist/shared.css && node validate.mjs",
     "test:e2e": "playwright test --config playwright.config.mjs",
     "typecheck": "node --check worker.mjs && node --check evaluator.mjs && node --check playground.mjs && node --check scenario.mjs && node --check validate.mjs && node --check playwright.config.mjs && node --check e2e/helpers.mjs && node --check e2e/playground.spec.mjs",
     "dev": "vite",
